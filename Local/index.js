@@ -1,87 +1,109 @@
 (() => {
-    const cv = document.getElementById('fx'), ctx = cv.getContext('2d');
-    const AR = 1586 / 992;                       // wallpaper aspect ratio
-    const rnd = (a, b) => a + Math.random() * (b - a);
-    const drops = [], rockets = [], sparks = [];
-    let W, H, iw, ih, ox, oy, k, wind = 0, mx = .5, next = 0;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   // keep the still image
+    const SRC = 'Rainy_Moonlit_Cityscape_Overlook.png';
+    const cv = document.getElementById('wall');
+    const gl = cv.getContext('webgl2') || cv.getContext('webgl');
+    if (!gl) return;
 
-    // Map a point on the wallpaper (0-1, 0-1) to screen pixels.
-    // Matches CSS "cover" + "center bottom", so fireworks stay over the skyline at any size.
-    const P = (fx, fy) => [ox + fx * iw, oy + fy * ih];
+    const VS = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
 
-    const drop = init => {
-        const l = rnd(10, 26);
-        return { x: rnd(-100, W + 100), y: init ? rnd(-H, H) : -l, l, v: l * rnd(.7, 1.1) + 8, a: rnd(.12, .4) };
+    // All regions are placed in wallpaper coordinates (uv: 0-1, y down), so they follow the image at any screen size.
+    const FS = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform sampler2D T; uniform vec2 R; uniform float A, t, w;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){
+  vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
+  return mix(mix(h(i),h(i+vec2(1.,0.)),f.x), mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x), f.y);
+}
+float el(vec2 uv, vec2 c, vec2 r){ return 1.-smoothstep(1.,1.5,length((uv-c)/r)); }  // 1 inside an ellipse
+void main(){
+  vec2 p=vec2(gl_FragCoord.x, R.y-gl_FragCoord.y);
+  float iw=max(R.x,R.y*A), ih=iw/A;                       // "cover", aligned bottom
+  vec2 uv=vec2((p.x-(R.x-iw)*.5)/iw, (p.y-(R.y-ih))/ih);
+  float g=w+.35*sin(t*1.3)*(.5+abs(w));                   // wind gust (cursor + gusts from index.js)
+  vec2 d=vec2(0.);
+
+  // lake: wobble the reflections, skip the guy and the far island
+  float wm=smoothstep(.528,.545,uv.y)*(1.-smoothstep(0.,.02,uv.y-(.58+.17*uv.x)))*smoothstep(.15,.22,uv.x)
+          *(1.-el(uv,vec2(.306,.63),vec2(.045,.13)))*(1.-el(uv,vec2(.93,.585),vec2(.09,.035)));
+  float depth=(uv.y-.53)*5.;
+  d.x+=wm*(.0006+.0022*depth)*(1.+abs(g))*(sin(uv.y*260.+t*1.3)+.6*sin(uv.y*610.-t*2.1+uv.x*30.));
+  d.y+=wm*.0006*(n(vec2(uv.x*60.,uv.y*180.+t*.5))-.5);
+
+  // clouds: slow rolling distortion, moon left alone
+  float sm=(1.-smoothstep(.40,.47,uv.y))*smoothstep(.1,.2,uv.x)*(1.-el(uv,vec2(.257,.11),vec2(.04,.065)));
+  d+=sm*(1.+abs(g))*.003*(vec2(n(vec2(uv.x*3.-t*.03,uv.y*5.)), n(vec2(uv.x*4.,uv.y*6.-t*.02+9.)))-.5);
+
+  // pines (top-left) and grass (bottom-right) lean with the wind
+  float tm=(1.-smoothstep(.09,.15,uv.x))*(1.-smoothstep(0.,.5,uv.y));
+  float gm=smoothstep(.72,.8,uv.y)*smoothstep(.45,.6,uv.x)*clamp((1.-uv.y)*5.,0.,1.);
+  d.x-=(tm+gm)*(g*.003+.0015*sin(t*1.9+uv.y*9.+uv.x*30.));
+
+  // the guy's jacket: sways more toward the hem
+  float cm=el(uv,vec2(.306,.6),vec2(.036,.052))*smoothstep(.55,.64,uv.y);
+  d.x-=cm*(g*.0025+.0015*sin(t*4.+uv.y*140.));
+
+  vec4 c=texture2D(T,uv+d);
+  c.rgb*=1.+wm*.25*(n(vec2(uv.x*90.,uv.y*250.-t*.8))-.5);   // glints on the water
+  gl_FragColor=vec4(c.rgb,1.);
+}`;
+
+    const sh = (type, src) => {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+        return s;
     };
 
-    function resize() {
-        const dpr = devicePixelRatio || 1;
-        W = innerWidth; H = innerHeight;
-        cv.width = W * dpr; cv.height = H * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        iw = Math.max(W, H * AR); ih = iw / AR;
-        ox = (W - iw) / 2; oy = H - ih; k = iw / 1586;
-        drops.length = 0;
-        for (let i = 0; i < W * H / 6000; i++) drops.push(drop(true));
+    const img = new Image();
+    img.onerror = () => console.error('Wallpaper not found at', img.src, '(file names are case-sensitive on GitHub Pages)');
+    img.onload = () => { try { start(); } catch (e) { console.error('Wallpaper shader failed (opening via file:// also causes this):', e); } };
+    img.src = SRC;
+
+    function start() {
+        const pr = gl.createProgram();
+        gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS));
+        gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS));
+        gl.linkProgram(pr); gl.useProgram(pr);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+        const loc = gl.getAttribLocation(pr, 'a');
+        gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+        gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+        for (const [k, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR],
+                              [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]])
+            gl.texParameteri(gl.TEXTURE_2D, k, v);
+
+        const U = n => gl.getUniformLocation(pr, n);
+        const uR = U('R'), ut = U('t'), uw = U('w');
+        gl.uniform1f(U('A'), img.naturalWidth / img.naturalHeight);
+
+        const size = () => {
+            const dpr = Math.min(devicePixelRatio || 1, 2);
+            cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+            gl.viewport(0, 0, cv.width, cv.height);
+        };
+        const draw = now => {
+            gl.uniform2f(uR, cv.width, cv.height);
+            gl.uniform1f(ut, now / 1000);
+            gl.uniform1f(uw, window.__wind || 0);
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+        };
+
+        addEventListener('resize', size);
+        window.__ar = img.naturalWidth / img.naturalHeight;   // lets index.js line the fireworks up exactly
+        size(); draw(0);
+        dispatchEvent(new Event('resize'));
+        cv.classList.add('ready');
+        const loop = now => { draw(now); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
     }
-
-    function burst(x, y, sc = 1) {
-        const hue = [8, 22, 42, 345][rnd(0, 4) | 0];   // warm oranges and pink, like the wallpaper
-        for (let i = 0; i < 70; i++) {
-            const a = rnd(0, 6.283), v = rnd(.4, 1.2) * k * sc;
-            sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, h: hue + rnd(-12, 12) });
-        }
-    }
-
-    function launch() {
-        const [x, y] = P(rnd(.58, .97), .5);           // rise from the skyline
-        rockets.push({ x, y, ty: P(0, rnd(.3, .44))[1] });
-    }
-
-    function frame(now) {
-        ctx.clearRect(0, 0, W, H);
-        // wind = cursor position + slow gusts
-        wind += ((mx - .5) * 1.6 + Math.sin(now / 2500) * .5 - wind) * .02;
-
-        ctx.globalCompositeOperation = 'lighter';
-        if (now > next) { launch(); next = now + rnd(1800, 5000); }
-        for (let i = rockets.length; i--;) {
-            const r = rockets[i];
-            r.y -= 2.4 * k;
-            ctx.fillStyle = '#ffd9a0';
-            ctx.beginPath(); ctx.arc(r.x, r.y, 1.2, 0, 6.283); ctx.fill();
-            if (r.y <= r.ty) { burst(r.x, r.y); rockets.splice(i, 1); }
-        }
-        for (let i = sparks.length; i--;) {
-            const s = sparks[i];
-            s.vx *= .965; s.vy = s.vy * .965 + .01 * k;
-            s.x += s.vx; s.y += s.vy; s.life -= .011;
-            if (s.life <= 0) { sparks.splice(i, 1); continue; }
-            ctx.fillStyle = `hsla(${s.h},100%,65%,${s.life})`;
-            ctx.beginPath(); ctx.arc(s.x, s.y, 1.3, 0, 6.283); ctx.fill();
-        }
-
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = '#bcd0ff';
-        for (const d of drops) {
-            ctx.globalAlpha = d.a;
-            ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - wind * d.l * .5, d.y - d.l); ctx.stroke();
-            d.x += wind * d.v * .5; d.y += d.v;
-            if (d.y > H) Object.assign(d, drop());
-            else if (d.x > W + 50) d.x -= W + 100;
-            else if (d.x < -50) d.x += W + 100;
-        }
-        ctx.globalAlpha = 1;
-        requestAnimationFrame(frame);
-    }
-
-    addEventListener('resize', resize);
-    addEventListener('pointermove', e => { mx = e.clientX / W; });
-    addEventListener('pointerdown', e => {
-        if (e.target.closest && e.target.closest('#home')) burst(e.clientX, e.clientY, 2.2);
-    });
-
-    resize();
-    // Respect reduced-motion: the wallpaper stays as a still image
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) requestAnimationFrame(frame);
 })();
