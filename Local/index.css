@@ -1,13 +1,85 @@
-html {
-    scroll-behavior: smooth;
-    padding: auto;
+:root {
+    --night: #050a14;
+    --glass: rgba(6, 11, 24, .72);
+    --moon: #e6eeff;
+    --mist: #9db0d0;
+    --lamp: #ffb35c;   /* the cabin window */
+    --line: rgba(190, 210, 255, .16);
 }
-body{
-    background-color: aqua;
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    background: var(--night);
+    color: var(--moon);
+    font: 300 1.05rem/1.8 "Spectral", Georgia, serif;
+}
+
+/* Wallpaper: fixed behind everything. Canvas (rain + fireworks) sits on top of the image. */
+.scene {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        url("Rainy_Moonlit_Cityscape_Overlook.png") center bottom / cover no-repeat,
+        linear-gradient(#0b1730, var(--night));
+}
+#fx { display: block; width: 100%; height: 100%; }
+
+header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    background: linear-gradient(rgba(5, 10, 20, .85), transparent);
+}
+nav {
+    display: flex;
     justify-content: center;
+    gap: 2.2rem;
+    padding: 1.2rem 1rem 2rem;
 }
-nav{
-    background-color: black;
+nav a {
+    color: var(--mist);
+    text-decoration: none;
+    transition: color .3s, text-shadow .3s;
+}
+nav a:hover { color: var(--lamp); text-shadow: 0 0 14px var(--lamp); }
+nav a:focus-visible { color: var(--lamp); outline: 2px solid var(--lamp); outline-offset: 6px; }
+
+section, footer { scroll-margin-top: 4rem; }
+
+#home {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    place-content: center;
     text-align: center;
-    color: green;
+    padding: 6rem 1.5rem 3rem;
+}
+h1 {
+    margin: 0;
+    font: 200 clamp(2.8rem, 9vw, 6.5rem) / 1.05 "Spectral", Georgia, serif;
+    letter-spacing: .02em;
+    text-shadow: 0 0 40px rgba(170, 200, 255, .45);
+}
+#home p { margin: 1rem 0 0; color: var(--mist); font-style: italic; font-size: 1.25rem; }
+#home .hint { margin-top: 3rem; font-size: .9rem; opacity: .7; }
+
+/* Content sits on frosted glass so the rain stays visible behind it */
+main > section:not(#home), footer {
+    width: min(100% - 2rem, 46rem);
+    margin: 0 auto 4rem;
+    padding: 2.5rem clamp(1.25rem, 4vw, 3rem);
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+h2 { margin: 0 0 1rem; font-weight: 300; font-size: 2rem; }
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
 }

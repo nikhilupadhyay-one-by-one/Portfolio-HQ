@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio of Nikhil Upadhyay | Local Portfolio">
+    <meta name="description" content="Portfolio of Nikhil Upadhyay">
+    <meta name="theme-color" content="#050a14">
     <title>Nikhil Upadhyay | Portfolio Local</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <script src="index.js" defer></script>
 </head>
 <body>
+    <!-- Live wallpaper: image + rain/fireworks canvas, fixed behind the whole page -->
+    <div class="scene" aria-hidden="true"><canvas id="fx"></canvas></div>
+
     <header>
         <nav aria-label="Main">
             <a href="#home">Home</a>
@@ -22,6 +29,7 @@
         <section id="home">
             <h1>Nikhil Upadhyay</h1>
             <p>Your tagline here</p>
+            <p class="hint">Move your cursor to bend the rain. Click to launch a firework.</p>
         </section>
 
         <section id="projects">
