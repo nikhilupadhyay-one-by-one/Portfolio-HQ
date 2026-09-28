@@ -3,4 +3,10 @@ html {
 }
 body{
     background-color: aqua;
+    justify-content: center;
+}
+nav{
+    background-color: black;
+    text-align: center;
+    color: green;
 }
