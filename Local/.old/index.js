@@ -7,17 +7,12 @@
     const rnd = (a, b) => a + Math.random() * (b - a);
     const drops = [], rockets = [], sparks = [], flakes = [];
     let W, H, dpr = 1, iw, ih, ox, oy, k, wind = 0, mx = .5, my = .5, next = 0, last = 0;
-    const storm = /[?&]storm\b/.test(location.search);   // add ?storm to the URL to see lightning every few seconds
-    let lx = 0, ly = 0, pz = 1, px = 0, py = 0, rr = 0;                    // smoothed cursor lean + camera (zoom, pan as fractions of the screen)
-    let strike = -1e9, nextStrike = storm ? 2500 : 6000, bolt = null, bu = .5;   // lightning
+    let lx = 0, ly = 0, pz = 1, px = 0, py = 0;                    // smoothed cursor lean + camera (zoom, pan as fractions of the screen)
+    let strike = -1e9, nextStrike = 11000, bolt = null, bu = .5;   // lightning
 
-    // Camera: the whole .scene layer (wallpaper + rain + fireworks) drifts as one, so nothing slides off the skyline.
-    // Clicks arrive in screen pixels, so map them back into the layer's own coordinates.
-    const scene = document.querySelector('.scene');
-    const toLayer = (x, y) => {
-        const dx = x - W / 2 - px * W, dy = y - H / 2 - py * H, c = Math.cos(rr), s = Math.sin(rr);
-        return [W / 2 + (dx * c + dy * s) / pz, H / 2 + (dy * c - dx * s) / pz];
-    };
+    // Camera: the wallpaper slowly pans and zooms (see frame). Fireworks and lightning live in
+    // "world" space (the un-zoomed wallpaper), so they ride along instead of sliding off the skyline.
+    const toWorld = (x, y) => [W / 2 + (x - W / 2) / pz + px * W, H / 2 + (y - H / 2) / pz + py * H];
 
     // Jagged bolt: repeatedly nudge midpoints sideways
     const zig = (x0, y0, x1, y1, j) => {
@@ -92,33 +87,28 @@
         window.__wind = wind;   // share with wall.js so the wallpaper leans with the same gusts
 
         // camera: slow drift, a gentle zoom "breathing", and a lean toward the cursor (eases in after load, no pop)
-        const t = now / 1000, ease = 1 - Math.exp(-t / 3);            // eases in after load, so there is no sudden pop
+        const t = now / 1000, age = window.__camOn ? (now - window.__camOn) / 1000 : -1, ease = age < 0 ? 0 : 1 - Math.exp(-age / 2.5);
         lx += ((mx - .5) * 2 - lx) * .03; ly += ((my - .5) * 2 - ly) * .03;
-        pz = 1 + ease * (.09 + Math.sin(t * .09) * .012);             // slow zoom "breathing"
-        const lim = (pz - 1) / 2 * .8, clamp = v => Math.max(-lim, Math.min(lim, v));   // never pan past the layer's overscan
-        px = clamp(ease * (Math.sin(t * .31) * .012 + Math.sin(t * .19 + 2) * .006 + lx * .01));
-        py = clamp(ease * (Math.sin(t * .23 + 1) * .008 + Math.sin(t * .14 + 4) * .004 + ly * .006));
-        rr = ease * Math.sin(t * .17 + 3) * .0045;                    // a hint of handheld roll (about a quarter of a degree)
-        scene.style.transform = `translate3d(${px * W}px, ${py * H}px, 0) rotate(${rr}rad) scale(${pz})`;
+        pz = 1 + ease * (.08 + Math.sin(t * .09) * .01);
+        const lim = (1 - 1 / pz) / 2 * .9, clamp = v => Math.max(-lim, Math.min(lim, v));   // never pan past the image edge
+        px = clamp(ease * (Math.sin(t * .21) * .011 + Math.sin(t * .13 + 2) * .007 + lx * .008));
+        py = clamp(ease * (Math.sin(t * .17 + 1) * .008 + Math.sin(t * .11 + 4) * .005 + ly * .005));
+        window.__cam = [px, py, pz];
 
         // lightning: rare and soft - at most two pulses, never a strobe
-        if (now > nextStrike) {
+        if (age >= 0 && now > nextStrike) {
             const [bx, by] = P(rnd(.25, .9), rnd(.04, .14));
-            strike = now; nextStrike = now + (storm ? rnd(3000, 6000) : rnd(14000, 38000)); bu = (bx - ox) / iw;
+            strike = now; nextStrike = now + rnd(22000, 55000); bu = (bx - ox) / iw;
             bolt = Math.random() < .6 ? zig(bx, by, bx + rnd(-.05, .05) * iw, P(0, rnd(.43, .5))[1], 60 * k) : null;   // otherwise: sheet lightning behind the clouds
             if (bolt) { const [qx, qy] = bolt[9]; bolt.br = zig(qx, qy, qx + rnd(-.06, .06) * iw, qy + rnd(60, 140) * k, 24 * k); }
             window.__sound?.thunder(rnd(1.2, 3.8));
         }
-        const pulse = a => a < 0 ? 0 : a < .04 ? a / .04 : Math.exp(-(a - .04) * 5), a0 = (now - strike) / 1000;
+        const pulse = a => a < 0 ? 0 : a < .04 ? a / .04 : Math.exp(-(a - .04) * 7), a0 = (now - strike) / 1000;
         const fl = Math.min(1, pulse(a0) + .55 * pulse(a0 - .24));
-        scene.style.filter = fl > .01 ? `brightness(${(1 + fl * .8).toFixed(2)})` : '';   // the whole layer flashes
+        window.__flash = [fl * .85, bu];
 
+        ctx.setTransform(dpr * pz, 0, 0, dpr * pz, dpr * (W / 2 - pz * (W / 2 + px * W)), dpr * (H / 2 - pz * (H / 2 + py * H)));   // world space
         ctx.globalCompositeOperation = 'lighter';
-        if (fl > .01) {                                   // cloud glow around the strike (the brightness flash is on the layer)
-            const [gx, gy] = P(bu, .13), g = ctx.createRadialGradient(gx, gy, 0, gx, gy, iw * .5);
-            g.addColorStop(0, `rgba(170,195,255,${fl * .3})`); g.addColorStop(1, 'rgba(170,195,255,0)');
-            ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-        }
         if (bolt && fl > .02) {
             ctx.lineJoin = 'round';
             for (const [pts, w] of [[bolt, 1], [bolt.br, .5]]) {
@@ -145,6 +135,7 @@
             ctx.beginPath(); ctx.arc(s.x, s.y, 1.3, 0, 6.283); ctx.fill();
         }
 
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);   // rain and snow stay in screen space
         ctx.globalCompositeOperation = 'source-over';
         ctx.strokeStyle = '#bcd0ff';
         for (const d of drops) {
@@ -173,7 +164,7 @@
     addEventListener('resize', resize);
     addEventListener('pointermove', e => { mx = e.clientX / W; my = e.clientY / H; });
     addEventListener('pointerdown', e => {
-        if (e.target.closest && e.target.closest('#home')) burst(...toLayer(e.clientX, e.clientY), 2.2);
+        if (e.target.closest && e.target.closest('#home')) burst(...toWorld(e.clientX, e.clientY), 2.2);
     });
 
     resize();
@@ -201,7 +192,7 @@ precision highp float;
 #else
 precision mediump float;
 #endif
-uniform sampler2D T; uniform vec2 R; uniform float A, t, w;
+uniform sampler2D T; uniform vec2 R; uniform vec3 C, F; uniform float A, t, w;
 float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float n(vec2 p){
   vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
@@ -210,6 +201,7 @@ float n(vec2 p){
 float el(vec2 uv, vec2 c, vec2 r){ return 1.-smoothstep(1.,1.5,length((uv-c)/r)); }  // 1 inside an ellipse
 void main(){
   vec2 p=vec2(gl_FragCoord.x, R.y-gl_FragCoord.y);
+  p=(p-R*.5)/C.z+R*.5+C.xy*R;                             // camera: zoom about the centre, then pan
   float iw=max(R.x,R.y*A), ih=iw/A;                       // "cover", aligned bottom
   vec2 uv=vec2((p.x-(R.x-iw)*.5)/iw, (p.y-(R.y-ih))/ih);
   float g=w+.35*sin(t*1.3)*(.5+abs(w));                   // wind gust (cursor + gusts from index.js)
@@ -237,6 +229,8 @@ void main(){
 
   vec4 c=texture2D(T,uv+d);
   c.rgb*=1.+wm*.25*(n(vec2(uv.x*90.,uv.y*250.-t*.8))-.5);   // glints on the water
+  float sk=1.-smoothstep(.4,.52,uv.y), l=dot(c.rgb,vec3(.3,.59,.11)), dx=(uv.x-F.y)*2.2;   // lightning lights the clouds most
+  c.rgb+=F.x*(.45+.55*exp(-dx*dx))*vec3(.5,.62,.95)*(sk*(.12+.9*smoothstep(.03,.3,l))+.05);
   gl_FragColor=vec4(c.rgb,1.);
 }`;
 
@@ -270,7 +264,7 @@ void main(){
             gl.texParameteri(gl.TEXTURE_2D, k, v);
 
         const U = n => gl.getUniformLocation(pr, n);
-        const uR = U('R'), ut = U('t'), uw = U('w');
+        const uR = U('R'), ut = U('t'), uw = U('w'), uC = U('C'), uF = U('F');
         gl.uniform1f(U('A'), img.naturalWidth / img.naturalHeight);
 
         const size = () => {
@@ -282,6 +276,9 @@ void main(){
             gl.uniform2f(uR, cv.width, cv.height);
             gl.uniform1f(ut, now / 1000);
             gl.uniform1f(uw, window.__wind || 0);
+            const c = window.__cam || [0, 0, 1], f = window.__flash || [0, .5];
+            gl.uniform3f(uC, c[0], c[1], c[2]);
+            gl.uniform3f(uF, f[0], f[1], 0);
             gl.drawArrays(gl.TRIANGLES, 0, 3);
         };
 
@@ -290,6 +287,7 @@ void main(){
         size(); draw(0);
         dispatchEvent(new Event('resize'));
         cv.classList.add('ready');
+        window.__camOn = performance.now();   // tells index.js the camera can start
         const loop = now => { draw(now); requestAnimationFrame(loop); };
         requestAnimationFrame(loop);
     }

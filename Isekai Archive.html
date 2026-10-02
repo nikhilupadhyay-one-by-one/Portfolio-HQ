@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Isekai Archive</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Inter:wght@400;600&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark;
+--bg:#0f1115;--fg:#e8e6df;--mut:#9a9aa3;--acc:#c9a24b;--acc2:#7a1f2b;--card:#181b22;--line:#2a2e38;
+--head:'Cinzel',Georgia,serif;--body:'Inter',system-ui,sans-serif}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.6;transition:background .5s,color .5s}
+body[data-t=shield]{--bg:#0d1420;--fg:#e6ebf2;--mut:#8d9bb0;--acc:#d4a73c;--acc2:#b3263a;--card:#152033;--line:#26364f}
+body[data-t=rezero]{--bg:#120f1c;--fg:#eee9f7;--mut:#a79fc0;--acc:#b69cff;--acc2:#e8e3ff;--card:#1b1629;--line:#32294a;--head:'Cormorant Garamond',Georgia,serif}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:12px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav a{color:var(--mut);text-decoration:none;padding:6px 16px;border-radius:99px;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+nav a.on{color:var(--bg);background:var(--acc)}
+.page{display:none;max-width:980px;margin:0 auto;padding:40px 20px 80px;animation:in .6s}
+.page.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1}}
+h1,h2,h3{font-family:var(--head);font-weight:700;margin:0 0 .4em;line-height:1.1}
+h1{font-size:clamp(2.4rem,8vw,4.6rem)}h2{font-size:1.8rem}
+.lead{color:var(--mut);font-size:1.1rem;max-width:560px}
+.hero{text-align:center;padding:30px 0 20px}
+.hero svg{width:min(240px,60%);height:auto;margin-bottom:18px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:32px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card p{color:var(--mut);margin:0}
+.btn{display:inline-block;margin-top:20px;padding:12px 26px;border:1px solid var(--acc);background:transparent;color:var(--acc);font:600 14px var(--body);letter-spacing:.1em;text-transform:uppercase;border-radius:8px;cursor:pointer;text-decoration:none;transition:.25s}
+.btn:hover{background:var(--acc);color:var(--bg)}
+/* shield */
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 14px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc2),var(--acc));width:0;transition:width 1.2s}
+.stat{display:flex;justify-content:space-between;font-size:14px}
+details{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:10px;padding:14px 18px;margin-top:12px}
+summary{cursor:pointer;font-family:var(--head);font-size:1.1rem}
+details p{color:var(--mut);margin:10px 0 0}
+.calam{font:700 2.6rem var(--head);color:var(--acc2);letter-spacing:.06em}
+/* rezero */
+.snow{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;display:none}
+body[data-t=rezero] .snow{display:block}
+.snow i{position:absolute;top:-10px;width:4px;height:4px;background:#fff;border-radius:50%;opacity:.6;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(105vh) translateX(30px)}}
+.page{position:relative;z-index:1}
+body[data-t=rezero] h1,body[data-t=rezero] h2{font-style:italic;font-weight:400}
+.loop{text-align:center}
+.count{font:italic 5rem var(--head);color:var(--acc)}
+.msg{min-height:3em;color:var(--mut);font-style:italic;font-size:1.2rem}
+.flash{animation:fl .8s}
+@keyframes fl{0%{filter:invert(1) hue-rotate(180deg)}100%{filter:none}}
+footer{text-align:center;color:var(--mut);font-size:12px;padding:20px}
+</style>
+</head>
+<body data-t="home">
+<div class="snow" id="snow"></div>
+<nav>
+<a href="#home" data-p="home">Archive</a>
+<a href="#shield" data-p="shield">Shield</a>
+<a href="#rezero" data-p="rezero">Re:Start</a>
+</nav>
+
+<section class="page" id="home">
+<div class="hero">
+<h1>Isekai Archive</h1>
+<p class="lead" style="margin:0 auto">Two worlds, two moods. A fan-made design study of hardship, trust and second chances.</p>
+</div>
+<div class="grid">
+<div class="card"><h3>The Shield</h3><p>Steel, gold and crimson. Heavy typography, defensive geometry, trust earned slowly.</p><a class="btn" href="#shield">Enter</a></div>
+<div class="card"><h3>The Loop</h3><p>Snow, lavender and silver. Serif italics, soft glow, time that folds back on itself.</p><a class="btn" href="#rezero">Enter</a></div>
+</div>
+</section>
+
+<section class="page" id="shield">
+<div class="hero">
+<svg viewBox="0 0 100 120"><path d="M50 4 94 20v40c0 30-20 48-44 56C26 108 6 90 6 60V20z" fill="none" stroke="var(--acc)" stroke-width="3"/><path d="M50 16 82 28v32c0 22-14 36-32 43C32 96 18 82 18 60V28z" fill="var(--card)" stroke="var(--acc2)" stroke-width="2"/><circle cx="50" cy="58" r="12" fill="var(--acc)"/></svg>
+<h1>Hold the Line</h1>
+<p class="lead" style="margin:0 auto">Not every hero carries a sword. Some carry everyone else.</p>
+</div>
+<div class="grid">
+<div class="card"><h3>Hero Status</h3>
+<div class="stat"><span>Defense</span><span>98</span></div><div class="bar"><i data-w="98%"></i></div>
+<div class="stat"><span>Resolve</span><span>87</span></div><div class="bar"><i data-w="87%"></i></div>
+<div class="stat"><span>Trust</span><span>42</span></div><div class="bar"><i data-w="42%"></i></div></div>
+<div class="card" style="text-align:center"><h3>Next Wave</h3><div class="calam" id="wave">--:--:--</div><p>Prepare. The village is counting on you.</p></div>
+</div>
+<h2 style="margin-top:40px">The Shield Tree</h2>
+<details><summary>Small Shield</summary><p>Humble beginnings. Every unlock begins with a monster nobody else wanted to fight.</p></details>
+<details><summary>Chimera Viper Shield</summary><p>Strength drawn from what you defeat. Use it wisely, and never in anger.</p></details>
+<details><summary>Shield of Rage</summary><p>Power that costs something. A reminder that fury is a tool, not a home.</p></details>
+</section>
+
+<section class="page" id="rezero">
+<div class="hero loop">
+<h1>Once More, From the Beginning</h1>
+<p class="lead" style="margin:0 auto">Every ending is a door that opens behind you.</p>
+</div>
+<div class="card loop" id="loopcard">
+<p>Loops attempted</p>
+<div class="count" id="n">0</div>
+<div class="msg" id="msg">Press the button when you are ready.</div>
+<button class="btn" id="ret">Return</button>
+</div>
+<div class="grid">
+<div class="card"><h3>Memory</h3><p>Only you remember. That is the weight and the gift.</p></div>
+<div class="card"><h3>Bonds</h3><p>People you save in one world, you must meet again in the next.</p></div>
+<div class="card"><h3>Resolve</h3><p>Start from zero, as many times as it takes.</p></div>
+</div>
+</section>
+
+<footer>Fan-made design concept. Not affiliated with any official work.</footer>
+
+<script>
+const body=document.body,pages=[...document.querySelectorAll('.page')],links=[...document.querySelectorAll('nav a')];
+function go(){
+  const h=(location.hash||'#home').slice(1);const p=pages.find(x=>x.id===h)?h:'home';
+  pages.forEach(x=>x.classList.toggle('on',x.id===p));
+  links.forEach(a=>a.classList.toggle('on',a.dataset.p===p));
+  body.dataset.t=p;window.scrollTo(0,0);
+  if(p==='shield')setTimeout(()=>document.querySelectorAll('.bar i').forEach(i=>i.style.width=i.dataset.w),100);
+  else document.querySelectorAll('.bar i').forEach(i=>i.style.width=0);
+}
+addEventListener('hashchange',go);go();
+// snow
+const s=document.getElementById('snow');
+for(let i=0;i<40;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.animationDuration=(6+Math.random()*8)+'s';e.style.animationDelay=(-Math.random()*10)+'s';e.style.width=e.style.height=(2+Math.random()*4)+'px';s.appendChild(e)}
+// countdown
+let t=3*3600+27*60+14;const w=document.getElementById('wave');
+setInterval(()=>{t=t>0?t-1:3*3600;const f=v=>String(v).padStart(2,'0');w.textContent=f(t/3600|0)+':'+f(t/60%60|0)+':'+f(t%60)},1000);
+// loop
+let n=0;const lines=["Back at the start. You remember everything.","Different choice, different road.","It hurts, but you know the way now.","Someone is waiting. Try again.","This time, you say it differently."];
+document.getElementById('ret').onclick=()=>{n++;document.getElementById('n').textContent=n;document.getElementById('msg').textContent=lines[n%lines.length];const c=document.getElementById('loopcard');c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash')};
+</script>
+</body>
+</html>
