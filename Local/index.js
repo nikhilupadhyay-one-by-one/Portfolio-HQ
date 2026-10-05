@@ -428,3 +428,162 @@ void main(){
         document.hidden ? ctx.suspend() : ctx.resume();
     });
 })();
+
+// // ++++++ MODIFIED CODE FOR SOUND FEATURE ++++
+// /* ============================================================
+//    5. SOUND SWITCH  (off by default · everything is generated in code, no audio files)
+//       rain · wind · waves on the shore · distant fireworks (boom + crackle) · thunder
+//       Other sections trigger the one-shots:   __sound.boom(delaySeconds)   __sound.thunder(delaySeconds)
+//       Console check after clicking "Sound":    __sound.demo()
+//    ============================================================ */
+// (() => {
+//     const AC = window.AudioContext || window.webkitAudioContext, btn = document.getElementById('sound');
+//     const LEVEL = 1;                                                  // overall volume, 0 – 1
+//     const rnd = (a, b) => a + Math.random() * (b - a);
+//     window.__sound = { boom() {}, thunder() {}, wave() {}, demo() {} };   // stubs: callers never throw, even if audio can't start
+//     if (!AC || !btn) return console.warn('[sound] ' + (AC ? 'no #sound button found (is this script before it?)' : 'Web Audio not supported'));
+
+//     let ctx, master, B, on = false, stops = [];
+
+//     /* ---------- noise buffers ---------- */
+//     // Loops seamlessly (the last half-second is cross-faded into the start) and is normalised to RMS .3
+//     const makeBuf = (secs, fill) => {
+//         const sr = ctx.sampleRate, n = sr * secs | 0, x = sr >> 1, raw = new Float32Array(n + x);
+//         fill(raw, sr);
+//         let e = 0; for (const v of raw) e += v * v;
+//         const k = .3 / Math.sqrt(e / raw.length), buf = ctx.createBuffer(1, n, sr), d = buf.getChannelData(0);
+//         for (let i = 0; i < n; i++) {
+//             const p = i / x * Math.PI / 2;
+//             d[i] = k * (i < x ? raw[i] * Math.sin(p) + raw[n + i] * Math.cos(p) : raw[i]);
+//         }
+//         return buf;
+//     };
+//     const white = r => { for (let i = 0; i < r.length; i++) r[i] = Math.random() * 2 - 1; };
+//     const pink = r => {          // Paul Kellet's pink-noise filter: -3 dB/octave, far more mid-range than brown noise
+//         const k = [.99886, .99332, .969, .8665, .55, -.7616], m = [.0555179, .0750759, .153852, .3104856, .5329522, -.016898], s = [0, 0, 0, 0, 0, 0];
+//         let tail = 0;
+//         for (let i = 0; i < r.length; i++) {
+//             const w = Math.random() * 2 - 1; let o = w * .5362 + tail;
+//             for (let j = 0; j < 6; j++) { s[j] = k[j] * s[j] + w * m[j]; o += s[j]; }
+//             r[i] = o; tail = w * .115926;
+//         }
+//     };
+//     const drops = (r, sr) => {   // ~140 random raindrop ticks per second
+//         for (let c = r.length / sr * 140; c > 0; c--) {
+//             const at = Math.random() * r.length | 0, len = rnd(.002, .012) * sr | 0, amp = Math.random() ** 1.5 * .8 + .2;
+//             for (let j = 0; j < len && at + j < r.length; j++) r[at + j] += amp * (Math.random() * 2 - 1) * Math.exp(-4 * j / len);
+//         }
+//     };
+
+//     /* ---------- building blocks ---------- */
+//     const layer = (buf, spec, gain) => {                              // looping noise -> filter chain -> gain -> master
+//         const s = ctx.createBufferSource(), g = ctx.createGain();
+//         const fs = spec.map(([type, hz, q = 1]) => { const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = hz; f.Q.value = q; return f; });
+//         s.buffer = buf; s.loop = true; g.gain.value = gain;
+//         [s, ...fs, g, master].reduce((a, b) => (a.connect(b), b));
+//         s.start(0, rnd(0, 3));
+//         return { gain: g.gain, freq: fs[0].frequency };
+//     };
+//     const lfo = (hz, depth, param) => {                               // slow wobble added on top of a parameter
+//         const o = ctx.createOscillator(), d = ctx.createGain();
+//         o.frequency.value = hz; d.gain.value = depth; o.connect(d); d.connect(param); o.start();
+//     };
+//     const when = d => {                                               // delay in SECONDS -> audio-clock time
+//         d = +d || 0;
+//         if (d > 30) console.warn('[sound] delay is in SECONDS, got ' + d + ' – milliseconds by mistake?');
+//         return ctx.currentTime + Math.max(0, d);
+//     };
+
+//     const build = () => {
+//         ctx = new AC();
+//         if (navigator.audioSession) navigator.audioSession.type = 'playback';   // iPhone: play even with the silent switch on
+//         master = ctx.createGain(); master.gain.value = 0;
+//         const pre = ctx.createGain(), sat = ctx.createWaveShaper(), curve = new Float32Array(2049);
+//         for (let i = 0; i < 2049; i++) curve[i] = Math.tanh((i / 1024 - 1) * 2);   // y = tanh(x) over -2…2: transparent when quiet,
+//         pre.gain.value = .5; sat.curve = curve; sat.oversample = '2x';             // soft ceiling so thunder + fireworks + waves can't hard-clip
+//         master.connect(pre); pre.connect(sat); sat.connect(ctx.destination);
+
+//         const sr = ctx.sampleRate, pop = ctx.createBuffer(1, sr * .03 | 0, sr), pd = pop.getChannelData(0);
+//         for (let i = 0; i < pd.length; i++) pd[i] = (Math.random() * 2 - 1) * Math.exp(-i / (sr * .004));   // one tiny "tick"
+//         B = { white: makeBuf(4, white), pink: makeBuf(6, pink), drops: makeBuf(6, drops), pop };
+
+//         const wash = layer(B.pink, [['highpass', 500], ['lowpass', 9000]], .3);       // rain: steady wash on the leaves …
+//         layer(B.drops, [['bandpass', 3500, .6]], .2);                                  // … plus individual drops
+//         lfo(.12, .08, wash.gain);                                                      // slow swell so it never sounds looped
+//         const wind = layer(B.pink, [['bandpass', 420, 1.1]], .4);                      // wind: band-passed noise …
+//         lfo(.07, .2, wind.gain); lfo(.13, .12, wind.gain); lfo(.05, 180, wind.freq);   // … gusting, and drifting in pitch
+//     };
+
+//     /* ---------- one-shots ---------- */
+//     const swell = (buf, type, [f0, f1, f2], peak, up, down) => {      // noise that builds for `up` s, then fades away over about `down` s
+//         const t = ctx.currentTime + .05, s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+//         s.buffer = buf; s.loop = true; f.type = type;
+//         f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + up); f.frequency.exponentialRampToValueAtTime(f2, t + up + down);
+//         g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(peak, t + up); g.gain.setTargetAtTime(0, t + up, down / 3);
+//         s.connect(f); f.connect(g); g.connect(master); s.start(t, rnd(0, 3)); s.stop(t + up + down * 1.5);
+//     };
+//     const wave = () => {                                              // one wave washing up the shore far below the overlook
+//         if (!on) return;
+//         const up = rnd(2.5, 4), down = rnd(3.5, 5.5);
+//         swell(B.pink, 'lowpass', [250, 1400, 450], rnd(.32, .42), up, down);          // the surge
+//         swell(B.white, 'highpass', [3500, 5000, 3000], rnd(.15, .2), up + .4, down - .4);   // the foam fizz
+//     };
+//     // Rolling rumble: pink noise through a sweeping low-pass, with swells and lulls ("rolls") in its volume
+//     const rumble = (delay, dur, peak, f0, f1, rolls) => {
+//         if (!on) return;
+//         const t = when(delay), s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+//         s.buffer = B.pink; s.loop = true; f.type = 'lowpass';
+//         f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
+//         g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(peak, t + Math.min(.12, dur * .06));
+//         Array.from({ length: rolls }, () => rnd(.12, .85)).sort((a, b) => a - b)
+//             .forEach((p, i) => g.gain.linearRampToValueAtTime(peak * (i % 2 ? .7 : .3) * (1 - .6 * p), t + dur * p));
+//         g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+//         s.connect(f); f.connect(g); g.connect(master); s.start(t, rnd(0, 3)); s.stop(t + dur + .1);
+//     };
+//     // A scatter of tiny noise ticks: firework crackle, or the sharp crack of a close lightning strike
+//     const crackle = (delay, n, span, loud, hz) => {
+//         if (!on) return;
+//         const t0 = when(delay);
+//         for (let i = 0; i < n; i++) {
+//             const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+//             s.buffer = B.pop; f.type = 'bandpass'; f.frequency.value = hz * rnd(.5, 1.8); f.Q.value = .8; g.gain.value = loud * rnd(.2, 1);
+//             s.connect(f); f.connect(g); g.connect(master); s.start(t0 + span * Math.random() ** 1.6);   // denser at the start, thinning out
+//         }
+//     };
+//     const boom = (d = 0) => { rumble(d, 1.8, .85, 900, 70, 2); crackle(+d + .15, 26, 2, .45, 3200); };
+//     const thunder = (d = 0) => {
+//         const near = d < 1.5;                                         // < ~500 m: the sharp crack arrives with the rumble
+//         if (near) crackle(d, 14, .45, .4, 2000);
+//         rumble(d, near ? 6 : 7.5, .8, near ? 1200 : 700, 55, 6);
+//     };
+//     window.__sound = { boom, thunder, wave, demo: () => { wave(); boom(1.5); thunder(4); } };
+
+//     const every = (fn, a, b) => {                                     // call fn every a–b seconds until stopped
+//         let id; const tick = () => { if (ctx.state === 'running') fn(); id = setTimeout(tick, rnd(a, b) * 1000); };
+//         id = setTimeout(tick, 600); return () => clearTimeout(id);
+//     };
+
+//     /* ---------- the switch ---------- */
+//     btn.addEventListener('click', async () => {
+//         try {
+//             if (!ctx) build();                                        // build FIRST: nothing below can leave the audio un-built
+//             on = !on;
+//             btn.setAttribute('aria-pressed', on);
+//             (btn.lastElementChild || btn).textContent = on ? 'Sound on' : 'Sound off';
+//             if (on) {
+//                 await ctx.resume();
+//                 if (!on) return;                                      // switched off again while resuming
+//                 master.gain.setTargetAtTime(LEVEL, ctx.currentTime, .6);
+//                 stops = [every(wave, 5, 10)];
+//             } else {
+//                 stops.forEach(stop => stop()); stops = [];
+//                 master.gain.setTargetAtTime(0, ctx.currentTime, .25);
+//                 setTimeout(() => { if (!on) ctx.suspend(); }, 1500);
+//             }
+//         } catch (err) { console.error('[sound]', err); }
+//     });
+//     document.addEventListener('visibilitychange', () => {             // silent while the tab is in the background
+//         if (!ctx || !on) return;
+//         document.hidden ? ctx.suspend() : ctx.resume();
+//     });
+// })();
