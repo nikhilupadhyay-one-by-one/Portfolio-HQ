@@ -43,23 +43,112 @@
             <h2>Projects</h2>
             <!-- Note that you need to keep only the most impactful stuff - get the project content - detailed content from chatgpt - send to claude to get the most impactful content -->
              <!-- So basically get content from gpt - send to claude and ask it to make it most impactufl -->
-            <h3>F1_LemunAI</h3>
-            <div></div>
-            <summary></summary>
+            
+            <article class="project-card">
+                <div class="project-header">
+                    <h3>LemunAI</h3>
+                    <p class="project-tagline">Hardware-Aware Local AI Platform</p>
+                </div>
+
+                <p class="project-summary">
+                    A personal local-first AI platform designed to squeeze useful intelligence out of consumer hardware — using optimized local models, Intel CPU/GPU/NPU acceleration, persistent local memory, and hardware-aware inference instead of cloud dependencies.
+                </p>
+
+                <div class="project-meta">
+                    <div class="tech-stack">
+                        <strong>Stack:</strong>
+                        <ul>
+                            <li>C++ (auth, shell, security, monitoring)</li>
+                            <li>Python (AI logic, inference orchestration)</li>
+                            <li>OpenVINO (device-aware optimization)</li>
+                            <li>SQLite (persistent local memory)</li>
+                            <li>Piper TTS (local text-to-speech)</li>
+                            <li>Qt/PySide6 (future GUI)</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-links">
+                        <a href="https://github.com/yourname/lemunaiv" class="btn-link" target="_blank">
+                            → GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <details class="project-details">
+                    <summary>See the Architecture</summary>
+                    <div class="details-content">
+                        <h4>Design Philosophy</h4>
+                        <p><strong>Core principle:</strong> "Burn hardware, not datacenters."</p>
+                        <p>Instead of sending every prompt to a remote server, LemunAI explores what modern consumer hardware can achieve locally by intelligently orchestrating CPU, integrated GPU, and NPU resources — particularly on Intel Core Ultra systems.</p>
+
+                        <h4>What Makes It Different</h4>
+                        <ul>
+                            <li><strong>Hardware-first architecture:</strong> Not just "running an LLM locally," but redesigning the entire AI stack around local compute constraints</li>
+                            <li><strong>Heterogeneous acceleration:</strong> Intelligently selects execution paths (CPU/GPU/NPU) based on model characteristics and workload patterns</li>
+                            <li><strong>Model residency exploration:</strong> Investigates dynamic paging and storage-backed inference to make larger models practical on constrained consumer machines</li>
+                            <li><strong>Privacy by design:</strong> All inference, memory, and state remain on the user's machine</li>
+                            <li><strong>No token billing:</strong> Consumes only the computational resources you already own</li>
+                        </ul>
+
+                        <h4>Current Work</h4>
+                        <ul>
+                            <li>OpenVINO-based local inference optimization experiments</li>
+                            <li>Intel CPU/GPU/NPU device detection and path selection</li>
+                            <li>Qwen-family model evaluation across execution targets</li>
+                            <li>C++ authentication and application-level safety mechanisms</li>
+                            <li>SQLite-backed persistent local memory architecture</li>
+                            <li>System resource monitoring for AI workload visibility</li>
+                        </ul>
+
+                        <h4>Hardware Testing</h4>
+                        <p>Not theoretical — actual experiments on consumer hardware:</p>
+                        <ul>
+                            <li>Qwen2.5-Coder 3B (GPU): 7–10 second initialization</li>
+                            <li>Qwen3 8B: CPU outperformed NPU on certain patterns (proving accelerators aren't always optimal)</li>
+                            <li>Identified real NPU compatibility limitations (VPUX unsupported conversions)</li>
+                        </ul>
+
+                        <h4>Long-Term Vision</h4>
+                        <p>A genuinely capable personal AI platform that:</p>
+                        <ul>
+                            <li>Dynamically selects models for different workloads</li>
+                            <li>Manages memory intelligently across RAM and SSD storage</li>
+                            <li>Maintains persistent context locally across sessions</li>
+                            <li>Provides voice interaction via local TTS</li>
+                            <li>Executes safe local tasks with appropriate safeguards</li>
+                            <li>Operates fully offline once models are installed</li>
+                        </ul>
+                    </div>
+                </details>
+            </article>
+
             <!-- i dont know what all features are available in html though.. -->
              <!-- need stuff like tech stack should show.. a link to github should show... and then show more and the information about the project should expand - like show more or some stuff -->
               <!-- also the more details when u click should be smooth - like since the website itself is smooth scrolling and all i dont need static buttons.. i know we can implement using css but which one is smoother ? css or javascript smoothness? -->
-            <ul class="projects-category">
-                <li>Tech Stack: C++, Python, OpenVINO, Qt</li>
-                <li><button>Github</button> <summary></summary>   </li>
-                <li>A Local Chatbot capable of generating text,code,img,music. my flagship project - make my own local assitant to automate the tasks.Implented C++ SHA256 security and Python OpenVINO.<button>Details</button></p></li>
-            </ul>
-            <p>P4_Guard : An Active Directory Monitoring Tool. Project helps me track down the changes in the directory so im aware what actually is going wrong and fix it later and review.<button>Details</button><button>Github</button></p>
-            <p>P3_NetPulse : An Active Networking Monitoring Tool. Project designed to help me analysing which application is taking how much bandwidth - this provides a view to see how the netwrok bandwidth is distributed among the various applications.<button>Details</button><button>Github</button></p>
-            <p>P5_Layoffs : Data Analysis on people for particular sectors of job. Project based on analyzing data - used orange application, scatter plot to visualisa the data.<button>Details</button><button>Github</button></p>
-            <p>P2_Echo : An API Based Chatbot - for test purposes. This specific project helps me understand the uses of the API key and how it is linked to the files and how files are retrieveed and all.<button>Details</button><button>Github</button></p>
-            <p>P1_Notepad : A simple and efficient Notepad for the use case of taking notes when necessary. First time working with GUI and Interfaces - this project gets me familiar on how to make GUI on real world system applications.<button>Details</button><button>Github</button></p>
         </section>
+
+        <!-- ORIGINAL CODEBASE -->
+        <!-- <section id="projects">
+            <h2>Projects</h2>
+            <!-- Note that you need to keep only the most impactful stuff - get the project content - detailed content from chatgpt - send to claude to get the most impactful content -->
+             <!-- So basically get content from gpt - send to claude and ask it to make it most impactufl -->
+            <!-- <h3>F1_LemunAI</h3> -->
+            <!-- <div></div> -->
+            <!-- <summary></summary> -->
+            <!-- i dont know what all features are available in html though.. -->
+             <!-- need stuff like tech stack should show.. a link to github should show... and then show more and the information about the project should expand - like show more or some stuff -->
+              <!-- also the more details when u click should be smooth - like since the website itself is smooth scrolling and all i dont need static buttons.. i know we can implement using css but which one is smoother ? css or javascript smoothness? -->
+            <!-- <ul class="projects-category"> -->
+                <!-- <li>Tech Stack: C++, Python, OpenVINO, Qt</li> -->
+                <!-- <li><button>Github</button> <summary></summary>   </li> -->
+                <!-- <li>A Local Chatbot capable of generating text,code,img,music. my flagship project - make my own local assitant to automate the tasks.Implented C++ SHA256 security and Python OpenVINO.<button>Details</button></p></li> -->
+            <!-- </ul> -->
+            <!-- <p>P4_Guard : An Active Directory Monitoring Tool. Project helps me track down the changes in the directory so im aware what actually is going wrong and fix it later and review.<button>Details</button><button>Github</button></p> -->
+            <!-- <p>P3_NetPulse : An Active Networking Monitoring Tool. Project designed to help me analysing which application is taking how much bandwidth - this provides a view to see how the netwrok bandwidth is distributed among the various applications.<button>Details</button><button>Github</button></p> -->
+            <!-- <p>P5_Layoffs : Data Analysis on people for particular sectors of job. Project based on analyzing data - used orange application, scatter plot to visualisa the data.<button>Details</button><button>Github</button></p> -->
+            <!-- <p>P2_Echo : An API Based Chatbot - for test purposes. This specific project helps me understand the uses of the API key and how it is linked to the files and how files are retrieveed and all.<button>Details</button><button>Github</button></p> -->
+            <!-- <p>P1_Notepad : A simple and efficient Notepad for the use case of taking notes when necessary. First time working with GUI and Interfaces - this project gets me familiar on how to make GUI on real world system applications.<button>Details</button><button>Github</button></p> -->
+        <!-- </section> -->
 
         <section id="experience">
             <h2>Experience and Simulations</h2>
