@@ -240,6 +240,213 @@
                 </details>
             </article>
 
+
+            <article class="project-card">
+                <div class="project-header">
+                    <h3>P3_NetPulse</h3>
+                    <p class="project-tagline">Cross-Platform Network Diagnostics & Observability</p>
+                </div>
+
+                <p class="project-summary">
+                    A cross-platform desktop application that transforms raw OS-level networking data and command output into live telemetry, structured diagnostics, process-attributed connections, and local-network intelligence through a shared Python core, Qt desktop interface, and CLI.
+                </p>
+
+                <div class="project-meta">
+                    <div class="tech-stack">
+                        <strong>Stack:</strong>
+                        <ul>
+                            <li>Python 3.10+ (core networking logic)</li>
+                            <li>PySide6 / Qt (cross-platform GUI)</li>
+                            <li>psutil (system introspection)</li>
+                            <li>Watchdog-style background workers</li>
+                            <li>Custom Qt painting (traffic chart)</li>
+                            <li>dnspython (advanced DNS records)</li>
+                            <li>pytest (automated testing)</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-links">
+                        <a href="https://github.com/yourname/p3netpulse" class="btn-link" target="_blank">
+                            → GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <details class="project-details">
+                    <summary>See the Architecture</summary>
+                    <div class="details-content">
+                        <h4>The Core Insight</h4>
+                        <p>Traditional network troubleshooting means switching between multiple platform-specific commands (ping, netstat, traceroute, arp, route...), each with different output formats and designed for terminal interpretation.</p>
+                        <p><strong>NetPulse's approach:</strong> Normalize command output across platforms into structured data, then present that data intelligently through live visualization instead of raw terminal output.</p>
+                        <p><strong>The transformation:</strong> OS signal → cross-platform parser → structured object → live visualization / CLI output</p>
+
+                        <h4>Live Bandwidth Monitoring</h4>
+                        <ul>
+                            <li><strong>Source:</strong> Direct OS network counters (psutil), not scraping another app's UI</li>
+                            <li><strong>Calculation:</strong> Finite difference: (current counter − previous counter) / elapsed time</li>
+                            <li><strong>Visualization:</strong> Custom Qt painting (not external graphing library) with:
+                                <ul>
+                                    <li>Two-minute scrolling chart</li>
+                                    <li>Download + upload rate overlay</li>
+                                    <li>Smart scaling that eases toward peak to avoid violent jumps</li>
+                                    <li>Cursor hover readouts for precise inspection</li>
+                                    <li>Per-adapter or combined throughput</li>
+                                </ul>
+                            </li>
+                            <li><strong>Robustness:</strong> Detects counter resets (interface disabled/driver reload) and treats negative deltas as zero instead of manufacturing false traffic spikes</li>
+                        </ul>
+
+                        <h4>Process-Attributed Socket Inspection</h4>
+                        <p>Instead of generic netstat output showing "TCP connection established," NetPulse answers: "Which program owns this socket, what state is it in, and who is it talking to?"</p>
+                        <ul>
+                            <li>Join socket table with process table</li>
+                            <li>Classify endpoints as external vs. local/private</li>
+                            <li>Optional reverse DNS for remote hostnames</li>
+                            <li>Multi-field filtering (process, PID, protocol, endpoint, state)</li>
+                            <li>Preserve partial info when elevation insufficient (honest partial data > silent gaps)</li>
+                            <li>CSV export of connection snapshot</li>
+                        </ul>
+
+                        <h4>Structured Network Diagnostics</h4>
+                        <p>Four integrated diagnostic tools all built on the same core:</p>
+
+                        <h5>Ping Analysis</h5>
+                        <ul>
+                            <li>Parse platform-specific output into structured Reply objects</li>
+                            <li>Support localized output (time, tiempo, tempo, zeit, temps...)</li>
+                            <li>Calculate: min/avg/max latency, packet loss, jitter, connection quality</li>
+                            <li>Quality states: Excellent → Poor → Unreachable</li>
+                            <li>Jitter = mean absolute difference between consecutive latency measurements</li>
+                            <li>Continuous or finite ping modes</li>
+                        </ul>
+
+                        <h5>Traceroute Analysis</h5>
+                        <ul>
+                            <li>Normalize Windows tracert and Unix traceroute output formats</li>
+                            <li>Extract: hop number, latency values, IP address independently (not positional)</li>
+                            <li>Classify hops as local network vs. internet</li>
+                            <li>Resolve hostnames separately (non-blocking) from hop discovery</li>
+                            <li>Preserve timed-out hops instead of discarding them</li>
+                        </ul>
+
+                        <h5>DNS Inspection</h5>
+                        <ul>
+                            <li>Support: A, AAAA, CNAME, MX, NS, TXT, SOA, PTR records</li>
+                            <li>Display TTL for each record</li>
+                            <li>Graceful degradation: dnspython optional, falls back to stdlib resolver</li>
+                            <li>UI shows which resolver configuration is active</li>
+                        </ul>
+
+                        <h5>TCP Port Scanning</h5>
+                        <ul>
+                            <li>Flexible port specification: individual (22,80,443), ranges (8000-8100), mixed</li>
+                            <li>Normalize ordering, duplicates, whitespace; reject invalid ports</li>
+                            <li>Concurrent thread-pool scanning (I/O bound workload)</li>
+                            <li>Progressive results: open ports appear as discovered</li>
+                            <li>Service identification: built-in common services + OS service database fallback</li>
+                            <li>Optional banner grabbing to reveal service info</li>
+                            <li>Full cancellation support</li>
+                        </ul>
+
+                        <h4>Local Network Discovery</h4>
+                        <ul>
+                            <li>Auto-detect relevant subnet from primary network interface</li>
+                            <li>Concurrent probe strategy: IP scan → ARP cache read → device table</li>
+                            <li>Offline OUI vendor lookup (bundled IEEE MAC prefixes, no external calls)</li>
+                            <li>Detect randomized MACs (Wi-Fi privacy) instead of calling them "Unknown"</li>
+                            <li>Conservative device classification: Roku→Streaming, Synology→Storage, etc.</li>
+                            <li>Identify: local machine, router, vendor, device role, response latency</li>
+                            <li>Subnet-size limits prevent accidental scanning of huge networks</li>
+                        </ul>
+
+                        <h4>Cross-Platform Engineering</h4>
+                        <p>The core challenge: Windows, macOS, and Linux do not behave identically. NetPulse works around this with:</p>
+                        <ul>
+                            <li><strong>Command output parsing:</strong> Look for numeric patterns rather than fixed English positions; support localized text variations</li>
+                            <li><strong>Subprocess handling:</strong> Windows suppresses console windows (CREATE_NO_WINDOW), Unix uses process groups for clean termination</li>
+                            <li><strong>Character encoding:</strong> Forgiving decode for unexpected/localized output</li>
+                            <li><strong>Process interface detection:</strong> Use UDP socket routing to determine which adapter carries internet traffic</li>
+                            <li><strong>Test coverage:</strong> Captured real output from Windows, Linux, macOS, and Spanish-locale environments</li>
+                        </ul>
+
+                        <h4>Responsive UI Through Background Workers</h4>
+                        <p>Long operations never block the main thread. All diagnostics run in background QThread workers:</p>
+                        <ul>
+                            <li>Results stream progressively (hop-by-hop, port-by-port, device-by-device)</li>
+                            <li>UI remains responsive throughout</li>
+                            <li>Full cancellation support (subprocess terminated cleanly)</li>
+                            <li>Partial results visible while operation continues</li>
+                        </ul>
+
+                        <h4>Unified Core Architecture</h4>
+                        <p>All networking logic lives in a platform-independent core that does <strong>not</strong> import Qt:</p>
+                        <ul>
+                            <li><strong>core/</strong> → networking + parsing + statistics (testable in isolation)</li>
+                            <li><strong>ui/</strong> → Qt presentation layer</li>
+                            <li><strong>cli.py</strong> → terminal interface using same core</li>
+                        </ul>
+                        <p>This allows the same diagnostics to power desktop GUI, CLI, and automated tests without duplicating logic.</p>
+
+                        <h4>CLI Access</h4>
+                        <p>The same core is accessible from command line:</p>
+                        <ul>
+                            <li>Interactive menu mode or direct commands</li>
+                            <li>Works over SSH without requiring X11/Wayland</li>
+                            <li>Examples: <code>netpulse --cli ping google.com -c 10</code></li>
+                            <li>Useful for remote troubleshooting or automation</li>
+                        </ul>
+
+                        <h4>Data Export</h4>
+                        <ul>
+                            <li>CSV export: traffic samples, connections, traceroute hops, devices</li>
+                            <li>JSON export for programmatic consumption</li>
+                            <li>Centralized formatting utilities ensure consistency across export</li>
+                        </ul>
+
+                        <h4>Testing & Quality Assurance</h4>
+                        <ul>
+                            <li><strong>70+ tests</strong> covering: parsers, statistics, subnet calculations, MAC handling, device classification, jitter/packet-loss math</li>
+                            <li><strong>Real bug caught:</strong> Subnet parser originally tried to expand /8 networks before checking size; test suite revealed this caused 17-second delay. Fixed to 0.09 seconds by checking <code>network.num_addresses</code> first.</li>
+                            <li><strong>Cross-platform CI:</strong> Windows, macOS, Linux across Python 3.10–3.12</li>
+                            <li><strong>No external dependencies for tests:</strong> No network access required, no graphical display needed</li>
+                        </ul>
+
+                        <h4>Important Design Decisions</h4>
+                        <ul>
+                            <li><strong>Sample OS counters, don't scrape UI:</strong> Traffic comes directly from kernel, not Task Manager</li>
+                            <li><strong>Treat command output as data:</strong> Parse into objects, not text dumps</li>
+                            <li><strong>Graceful degradation:</strong> Optional dependencies like dnspython disappear cleanly if unavailable</li>
+                            <li><strong>Conservative inference:</strong> Admit uncertainty rather than guess wrong device classification</li>
+                            <li><strong>Bounded resources:</strong> Rolling histories and size limits prevent memory runaway</li>
+                            <li><strong>Progressive results:</strong> Don't wait for everything; render as data arrives</li>
+                            <li><strong>Counter reset resilience:</strong> Detect negative deltas from driver reloads, treat as zero</li>
+                        </ul>
+
+                        <h4>UI Structure</h4>
+                        <ul>
+                            <li><strong>Traffic:</strong> Live chart, adapter selector, rate readouts, peak/average, session totals</li>
+                            <li><strong>Connections:</strong> Process + PID + protocol + endpoints + state, with filtering and export</li>
+                            <li><strong>Diagnostics:</strong> Unified interface for Ping / Traceroute / DNS / Port Scan</li>
+                            <li><strong>Devices:</strong> Discovered hosts with vendor, role, latency, MAC address</li>
+                        </ul>
+
+                        <h4>Engineering Concepts Demonstrated</h4>
+                        <ul>
+                            <li>Cross-platform networking abstractions</li>
+                            <li>Parsing semi-structured command output</li>
+                            <li>Concurrent I/O-bound operations</li>
+                            <li>Real-time data visualization</li>
+                            <li>Systems integration (multiple OS APIs)</li>
+                            <li>Architecture separation (core/ui/cli)</li>
+                            <li>Subprocess management and lifecycle</li>
+                            <li>SQLite / data persistence patterns</li>
+                            <li>Event streaming and backpressure</li>
+                            <li>Automated testing of platform-dependent code</li>
+                        </ul>
+                    </div>
+                </details>
+            </article>
+
             <!-- i dont know what all features are available in html though.. -->
              <!-- need stuff like tech stack should show.. a link to github should show... and then show more and the information about the project should expand - like show more or some stuff -->
               <!-- also the more details when u click should be smooth - like since the website itself is smooth scrolling and all i dont need static buttons.. i know we can implement using css but which one is smoother ? css or javascript smoothness? -->
