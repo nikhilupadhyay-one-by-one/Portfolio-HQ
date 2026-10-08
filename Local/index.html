@@ -122,6 +122,124 @@
                 </details>
             </article>
 
+
+            <article class="project-card">
+                <div class="project-header">
+                    <h3>P4_Guard</h3>
+                    <p class="project-tagline">File-Integrity Monitoring & Tamper Detection</p>
+                </div>
+
+                <p class="project-summary">
+                    A local file-integrity and tamper-detection system that verifies real content changes, classifies their security impact, detects ransomware-like mass encryption patterns, and preserves the resulting evidence in a persistent local audit trail.
+                </p>
+
+                <div class="project-meta">
+                    <div class="tech-stack">
+                        <strong>Stack:</strong>
+                        <ul>
+                            <li>Python (core monitoring & logic)</li>
+                            <li>Watchdog (OS filesystem notifications)</li>
+                            <li>SHA-256 (cryptographic fingerprinting)</li>
+                            <li>SQLite (append-only audit history)</li>
+                            <li>Flask (local web dashboard)</li>
+                            <li>Entropy analysis (Shannon entropy for encryption detection)</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-links">
+                        <a href="https://github.com/yourname/p4guard" class="btn-link" target="_blank">
+                            → GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <details class="project-details">
+                    <summary>See How It Works</summary>
+                    <div class="details-content">
+                        <h4>The Core Problem</h4>
+                        <p>A filesystem generates enormous noise — a single editor save triggers multiple OS notifications (write → temp file → rename → timestamp update). Simply logging every "modified" event buries important security signals inside routine filesystem activity.</p>
+                        <p><strong>Guard's solution:</strong> Treat OS notifications as hints, not facts. Debounce the noise, verify actual changes, and only record what matters.</p>
+
+                        <h4>The Philosophy</h4>
+                        <p><strong>Event → Verification → Interpretation → Correlation → Evidence</strong></p>
+                        <p>Instead of: "something happened at this path" → Guard answers: "something happened, here's what actually changed, how serious it is, and whether it's part of a larger pattern."</p>
+
+                        <h4>File Fingerprinting</h4>
+                        <ul>
+                            <li><strong>SHA-256 hash:</strong> Content-level identity verification</li>
+                            <li><strong>Permission mode:</strong> Detects files becoming executable</li>
+                            <li><strong>Size & timestamp:</strong> Quantifies magnitude of change</li>
+                            <li><strong>Entropy analysis:</strong> Detects readable content becoming random (encryption signature)</li>
+                        </ul>
+                        <p>Default hash limit: 256 MB (avoids performance overhead on large files)</p>
+
+                        <h4>Severity Classification</h4>
+                        <ul>
+                            <li><strong>CRITICAL:</strong> Sensitive paths (.ssh, .env, credentials), unexpected executable permissions, entropy spikes (0 → 7.2+ bits/byte)</li>
+                            <li><strong>WARNING:</strong> Executable modification, file deletion, major truncation, permission changes</li>
+                            <li><strong>NOTICE:</strong> Config changes, file creation, renames</li>
+                            <li><strong>INFO:</strong> Routine content changes</li>
+                        </ul>
+
+                        <h4>Ransomware Burst Detection</h4>
+                        <p>The most sophisticated layer: one file becoming unreadable is unremarkable; hundreds becoming unreadable in seconds resembles ransomware behavior.</p>
+                        <ul>
+                            <li>Maintains short-term history of entropy spikes</li>
+                            <li>Triggers on <strong>20+ distinct files</strong> in <strong>30-second window</strong> with high-entropy transformation</li>
+                            <li>60-second cooldown prevents duplicate alerts</li>
+                            <li>Automatically excludes expected formats (ZIP, PNG, MP4, PDF, etc.)</li>
+                        </ul>
+
+                        <h4>Event Architecture</h4>
+                        <ul>
+                            <li><strong>Event collection:</strong> Watchdog catches OS notifications (non-blocking queue)</li>
+                            <li><strong>Event processing:</strong> Separate loop applies quiet period (0.4s), fingerprints, analyzes</li>
+                            <li><strong>Event storage:</strong> Append-only SQLite audit history + mutable fingerprint state</li>
+                            <li><strong>Event presentation:</strong> Decoupled terminal CLI and live web dashboard</li>
+                        </ul>
+                        <p>This separation prevents filesystem bursts from overwhelming the watcher and allows multiple frontends to consume the same verified events.</p>
+
+                        <h4>Operational Modes</h4>
+                        <ul>
+                            <li><strong>watch:</strong> Live monitoring with optional dashboard launch</li>
+                            <li><strong>baseline:</strong> Record current filesystem as known-good state</li>
+                            <li><strong>audit:</strong> Compare current state against baseline (CI/automation suitable)</li>
+                            <li><strong>history:</strong> Display recorded events with severity/path filtering</li>
+                            <li><strong>stats:</strong> Summary of monitoring activity and busiest paths</li>
+                        </ul>
+
+                        <h4>Offline Integrity Auditing</h4>
+                        <p>Live monitoring only catches changes while Guard is running. Guard also supports baseline + audit workflows:</p>
+                        <ul>
+                            <li>Baseline: Fingerprints entire directory tree as known-good</li>
+                            <li>Audit: Walks current filesystem, compares against baseline, identifies new/changed/removed files</li>
+                            <li>Non-zero exit on differences (useful for automation)</li>
+                        </ul>
+                        <p>This provides two complementary protection modes: <strong>live detection</strong> and <strong>offline discovery</strong>.</p>
+
+                        <h4>Local Web Dashboard</h4>
+                        <ul>
+                            <li>Built-in Flask HTTP server (no external backend)</li>
+                            <li>Real-time event streaming with cursor-based pagination</li>
+                            <li>Summary: file count, event count, severity breakdown, busiest paths</li>
+                            <li>Works entirely locally (no cloud dependency)</li>
+                        </ul>
+
+                        <h4>Engineering Concepts Demonstrated</h4>
+                        <ul>
+                            <li>Filesystem event monitoring (OS integration)</li>
+                            <li>Event debouncing (collapsing noise into signals)</li>
+                            <li>Cryptographic verification (SHA-256 fingerprinting)</li>
+                            <li>Information theory (Shannon entropy for pattern detection)</li>
+                            <li>Temporal pattern detection (ransomware-style burst analysis)</li>
+                            <li>Concurrent data layer (SQLite WAL mode, reentrant locking)</li>
+                            <li>Local networking (HTTP API, live dashboard)</li>
+                            <li>CLI design (multiple operational workflows)</li>
+                        </ul>
+                    </div>
+                </details>
+            </article>
+
             <!-- i dont know what all features are available in html though.. -->
              <!-- need stuff like tech stack should show.. a link to github should show... and then show more and the information about the project should expand - like show more or some stuff -->
               <!-- also the more details when u click should be smooth - like since the website itself is smooth scrolling and all i dont need static buttons.. i know we can implement using css but which one is smoother ? css or javascript smoothness? -->
