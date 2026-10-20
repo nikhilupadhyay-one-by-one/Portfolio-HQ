@@ -1,4 +1,51 @@
 /* ============================================================
+   0. LOADING SCREEN  (counts up until the wallpaper is ready)
+   ============================================================ */
+(() => {
+    const root = document.documentElement;
+    const loader = document.getElementById('loader');
+    const num = document.getElementById('loader-num');
+    const line = document.getElementById('loader-line');
+    const wall = document.getElementById('wall');
+    if (!loader || !wall) return;
+
+    // Three things to wait for: fonts, the wallpaper downloaded AND decoded, the WebGL wall's first frame
+    const img = new Image();
+    img.src = 'Rainy_Moonlit_Cityscape_Overlook.png';
+    const picture = new Promise(r => { img.onload = img.onerror = r; }).then(() => img.decode?.().catch(() => {}));
+    const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+    const scene = picture.then(() => new Promise(r => {
+        if (wall.classList.contains('ready')) return r();
+        new MutationObserver((_, o) => { if (wall.classList.contains('ready')) { o.disconnect(); r(); } })
+            .observe(wall, { attributes: true, attributeFilter: ['class'] });
+        setTimeout(r, 3000);   // WebGL off / reduced motion: #wall never gets "ready", the still image is enough
+    }));
+
+    // Each step is worth a share of the 100%
+    let got = 0, shown = 0;
+    [[fonts, 15], [picture, 60], [scene, 25]].forEach(([p, w]) =>
+        Promise.resolve(p).catch(() => {}).then(() => { got += w; }));
+    setTimeout(() => { got = 100; }, 20000);   // safety net: never stuck forever
+
+    const finish = () => {
+        root.classList.remove('is-loading');
+        loader.classList.add('gone');
+        setTimeout(() => loader.remove(), 1200);
+    };
+    const frame = () => {
+        const cap = got >= 100 ? 100 : Math.min(got + 15, 97);
+        // catch up to real progress, then crawl slowly so it never looks frozen
+        shown = Math.min(cap, shown + (shown < got ? (got - shown) * .1 + .2 : .04));
+        num.textContent = Math.floor(shown);
+        line.style.transform = `scaleX(${shown / 100})`;
+        if (shown < 100) return requestAnimationFrame(frame);
+        setTimeout(finish, 300);               // hold on 100% for a beat
+    };
+    requestAnimationFrame(frame);
+})();
+// LOADING SCREEN ENDS
+
+/* ============================================================
    1. RAIN, SNOW AND FIREWORKS  (canvas 2D layer, #fx)
    ============================================================ */
 (() => {

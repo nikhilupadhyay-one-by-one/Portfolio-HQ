@@ -44,6 +44,43 @@ body {
 #wall.ready { opacity: 1; }
 #fx { z-index: 1; }
 
+/* Loading screen (index.js section 0): same night sky as the page, moon-coloured count, lamp-coloured line */
+html.is-loading, html.is-loading body { overflow: hidden; }
+#loader {
+    position: fixed;
+    inset: 0;
+    z-index: 990;                       /* over the page and nav, under the custom cursor (999) */
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1.6rem;
+    background: linear-gradient(#0b1730, var(--night));
+    transition: opacity 1s ease, visibility 1s;
+}
+#loader.gone { opacity: 0; visibility: hidden; }
+#loader-count {
+    font: 200 clamp(4rem, 16vw, 10rem) / 1 "Spectral", Georgia, serif;
+    font-variant-numeric: lining-nums tabular-nums;
+    letter-spacing: .02em;
+    color: var(--moon);
+    text-shadow: 0 0 40px rgba(170, 200, 255, .45);   /* same glow as the h1 */
+}
+#loader-count small { font-size: .3em; margin-left: .15em; color: var(--mist); }
+#loader-track { width: min(60vw, 18rem); height: 1px; background: var(--line); }
+#loader-line {
+    display: block;
+    height: 100%;
+    background: var(--lamp);
+    box-shadow: 0 0 10px var(--lamp);   /* same glow as the nav underline */
+    transform: scaleX(0);
+    transform-origin: left;
+}
+@media (scripting: none) {              /* no JS: never trap anyone behind the loader */
+    #loader { display: none; }
+    html.is-loading, html.is-loading body { overflow: auto; }
+}
+/* LOADING SCREEN CSS ENDS */
+
 header {
     position: fixed;
     top: 0; left: 0; right: 0;

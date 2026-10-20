@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- <html lang="en"> -->
+<html lang="en" class="is-loading">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,16 @@
     <script src="index.js" defer></script>
 </head>
 <body>
+    <!-- LOADING SCREEN -->
+    <div id="loader" role="status" aria-label="Loading">
+        <div id="loader-count" aria-hidden="true">
+            <span id="loader-num">0</span><small>%</small>
+        </div>
+        <div id="loader-track">
+            <span id="loader-line"></span>
+        </div>
+    </div>
+    <!-- LOADING SCREEN ENDS -->
     <!-- Live wallpaper: #wall paints the animated scene itself, #fx layers rain + fireworks on top -->
     <div class="scene" aria-hidden="true">
         <canvas id="wall"></canvas>
@@ -571,8 +582,11 @@
             <h2>Achievements</h2>
             <ul>
                 <li>Oracle - Java Certified Foundations Associate</li>
+                <!-- earned in sem 5 beginning for this industrial certification -->
                 <li>IIT Kanpur - Data Structures and Algorithm Design | NPTEL</li>
+                <!-- earned this in sem 3 the first nptel course of mine -->
                 <li>Cisco - CCNA | Netcad</li>
+                <!-- earned in sem 3 for nac subject -->
                 <li>Shortlisted at SIH 2026</li>
             </ul>
         </section>
