@@ -415,6 +415,7 @@ h2 { margin: 0 0 1rem; font-weight: 300; font-size: 2rem; }
 @media (max-width: 34rem) { .about-facts div { grid-template-columns: 1fr; gap: .2rem; } }
 
 /* Valorant-style location readout: small caps tag, mono coordinates, blinking marker */
+.about-location[hidden] { display: none; }
 .about-location { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin: 2rem 0 0; font: 400 .85rem/1.4 "Courier New", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--mist); }
 .about-location .loc-tag { color: var(--lamp); }
 .blink-dot { width: .55rem; height: .55rem; border-radius: 50%; background: var(--lamp); box-shadow: 0 0 10px var(--lamp); animation: blink 1.4s steps(2, start) infinite; }

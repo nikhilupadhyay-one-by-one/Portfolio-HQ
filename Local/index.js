@@ -651,6 +651,7 @@ void main(){
             const l = data.location;                       // location sits under its own key, so other data can live beside it later
             document.getElementById('loc-coords').textContent = `${dm(l.lat, 'N', 'S')} ${dm(l.lon, 'E', 'W')}`;
             document.getElementById('loc-place').textContent = [l.city, l.country].filter(Boolean).join(', ');
+            document.getElementById('about-location').hidden = false;   // show the line only once real data has loaded
         })
         .catch(err => console.warn('[location]', err.message));   // fallback text in the HTML stays
 })();
