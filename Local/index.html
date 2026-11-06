@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!-- <html lang="en"> -->
 <html lang="en" class="is-loading">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +10,12 @@
     <title>Nikhil Upadhyay | Portfolio Local</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;1,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;1,300&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <script src="index.js" defer></script>
 </head>
+
 <body>
     <!-- LOADING SCREEN -->
     <div id="loader" role="status" aria-label="Loading">
@@ -54,8 +57,8 @@
         <section id="projects">
             <h2>Projects</h2>
             <!-- Note that you need to keep only the most impactful stuff - get the project content - detailed content from chatgpt - send to claude to get the most impactful content -->
-             <!-- So basically get content from gpt - send to claude and ask it to make it most impactufl -->
-            
+            <!-- So basically get content from gpt - send to claude and ask it to make it most impactufl -->
+
             <article class="project-card">
                 <div class="project-header">
                     <h3>F1_LemunAI</h3>
@@ -63,7 +66,9 @@
                 </div>
 
                 <p class="project-summary">
-                    A personal local-first AI platform designed to squeeze useful intelligence out of consumer hardware — using optimized local models, Intel CPU/GPU/NPU acceleration, persistent local memory, and hardware-aware inference instead of cloud dependencies.
+                    A personal local-first AI platform designed to squeeze useful intelligence out of consumer hardware
+                    — using optimized local models, Intel CPU/GPU/NPU acceleration, persistent local memory, and
+                    hardware-aware inference instead of cloud dependencies.
                 </p>
 
                 <div class="project-meta">
@@ -91,15 +96,23 @@
                     <div class="details-content">
                         <h4>Design Philosophy</h4>
                         <p><strong>Core principle:</strong> "Burn hardware, not datacenters."</p>
-                        <p>Instead of sending every prompt to a remote server, LemunAI explores what modern consumer hardware can achieve locally by intelligently orchestrating CPU, integrated GPU, and NPU resources — particularly on Intel Core Ultra systems.</p>
+                        <p>Instead of sending every prompt to a remote server, LemunAI explores what modern consumer
+                            hardware can achieve locally by intelligently orchestrating CPU, integrated GPU, and NPU
+                            resources — particularly on Intel Core Ultra systems.</p>
 
                         <h4>What Makes It Different</h4>
                         <ul>
-                            <li><strong>Hardware-first architecture:</strong> Not just "running an LLM locally," but redesigning the entire AI stack around local compute constraints</li>
-                            <li><strong>Heterogeneous acceleration:</strong> Intelligently selects execution paths (CPU/GPU/NPU) based on model characteristics and workload patterns</li>
-                            <li><strong>Model residency exploration:</strong> Investigates dynamic paging and storage-backed inference to make larger models practical on constrained consumer machines</li>
-                            <li><strong>Privacy by design:</strong> All inference, memory, and state remain on the user's machine</li>
-                            <li><strong>No token billing:</strong> Consumes only the computational resources you already own</li>
+                            <li><strong>Hardware-first architecture:</strong> Not just "running an LLM locally," but
+                                redesigning the entire AI stack around local compute constraints</li>
+                            <li><strong>Heterogeneous acceleration:</strong> Intelligently selects execution paths
+                                (CPU/GPU/NPU) based on model characteristics and workload patterns</li>
+                            <li><strong>Model residency exploration:</strong> Investigates dynamic paging and
+                                storage-backed inference to make larger models practical on constrained consumer
+                                machines</li>
+                            <li><strong>Privacy by design:</strong> All inference, memory, and state remain on the
+                                user's machine</li>
+                            <li><strong>No token billing:</strong> Consumes only the computational resources you already
+                                own</li>
                         </ul>
 
                         <h4>Current Work</h4>
@@ -116,7 +129,8 @@
                         <p>Not theoretical — actual experiments on consumer hardware:</p>
                         <ul>
                             <li>Qwen2.5-Coder 3B (GPU): 7–10 second initialization</li>
-                            <li>Qwen3 8B: CPU outperformed NPU on certain patterns (proving accelerators aren't always optimal)</li>
+                            <li>Qwen3 8B: CPU outperformed NPU on certain patterns (proving accelerators aren't always
+                                optimal)</li>
                             <li>Identified real NPU compatibility limitations (VPUX unsupported conversions)</li>
                         </ul>
 
@@ -142,7 +156,9 @@
                 </div>
 
                 <p class="project-summary">
-                    A local file-integrity and tamper-detection system that verifies real content changes, classifies their security impact, detects ransomware-like mass encryption patterns, and preserves the resulting evidence in a persistent local audit trail.
+                    A local file-integrity and tamper-detection system that verifies real content changes, classifies
+                    their security impact, detects ransomware-like mass encryption patterns, and preserves the resulting
+                    evidence in a persistent local audit trail.
                 </p>
 
                 <div class="project-meta">
@@ -169,65 +185,82 @@
                     <summary>See How It Works</summary>
                     <div class="details-content">
                         <h4>The Core Problem</h4>
-                        <p>A filesystem generates enormous noise — a single editor save triggers multiple OS notifications (write → temp file → rename → timestamp update). Simply logging every "modified" event buries important security signals inside routine filesystem activity.</p>
-                        <p><strong>Guard's solution:</strong> Treat OS notifications as hints, not facts. Debounce the noise, verify actual changes, and only record what matters.</p>
+                        <p>A filesystem generates enormous noise — a single editor save triggers multiple OS
+                            notifications (write → temp file → rename → timestamp update). Simply logging every
+                            "modified" event buries important security signals inside routine filesystem activity.</p>
+                        <p><strong>Guard's solution:</strong> Treat OS notifications as hints, not facts. Debounce the
+                            noise, verify actual changes, and only record what matters.</p>
 
                         <h4>The Philosophy</h4>
                         <p><strong>Event → Verification → Interpretation → Correlation → Evidence</strong></p>
-                        <p>Instead of: "something happened at this path" → Guard answers: "something happened, here's what actually changed, how serious it is, and whether it's part of a larger pattern."</p>
+                        <p>Instead of: "something happened at this path" → Guard answers: "something happened, here's
+                            what actually changed, how serious it is, and whether it's part of a larger pattern."</p>
 
                         <h4>File Fingerprinting</h4>
                         <ul>
                             <li><strong>SHA-256 hash:</strong> Content-level identity verification</li>
                             <li><strong>Permission mode:</strong> Detects files becoming executable</li>
                             <li><strong>Size & timestamp:</strong> Quantifies magnitude of change</li>
-                            <li><strong>Entropy analysis:</strong> Detects readable content becoming random (encryption signature)</li>
+                            <li><strong>Entropy analysis:</strong> Detects readable content becoming random (encryption
+                                signature)</li>
                         </ul>
                         <p>Default hash limit: 256 MB (avoids performance overhead on large files)</p>
 
                         <h4>Severity Classification</h4>
                         <ul>
-                            <li><strong>CRITICAL:</strong> Sensitive paths (.ssh, .env, credentials), unexpected executable permissions, entropy spikes (0 → 7.2+ bits/byte)</li>
-                            <li><strong>WARNING:</strong> Executable modification, file deletion, major truncation, permission changes</li>
+                            <li><strong>CRITICAL:</strong> Sensitive paths (.ssh, .env, credentials), unexpected
+                                executable permissions, entropy spikes (0 → 7.2+ bits/byte)</li>
+                            <li><strong>WARNING:</strong> Executable modification, file deletion, major truncation,
+                                permission changes</li>
                             <li><strong>NOTICE:</strong> Config changes, file creation, renames</li>
                             <li><strong>INFO:</strong> Routine content changes</li>
                         </ul>
 
                         <h4>Ransomware Burst Detection</h4>
-                        <p>The most sophisticated layer: one file becoming unreadable is unremarkable; hundreds becoming unreadable in seconds resembles ransomware behavior.</p>
+                        <p>The most sophisticated layer: one file becoming unreadable is unremarkable; hundreds becoming
+                            unreadable in seconds resembles ransomware behavior.</p>
                         <ul>
                             <li>Maintains short-term history of entropy spikes</li>
-                            <li>Triggers on <strong>20+ distinct files</strong> in <strong>30-second window</strong> with high-entropy transformation</li>
+                            <li>Triggers on <strong>20+ distinct files</strong> in <strong>30-second window</strong>
+                                with high-entropy transformation</li>
                             <li>60-second cooldown prevents duplicate alerts</li>
                             <li>Automatically excludes expected formats (ZIP, PNG, MP4, PDF, etc.)</li>
                         </ul>
 
                         <h4>Event Architecture</h4>
                         <ul>
-                            <li><strong>Event collection:</strong> Watchdog catches OS notifications (non-blocking queue)</li>
-                            <li><strong>Event processing:</strong> Separate loop applies quiet period (0.4s), fingerprints, analyzes</li>
-                            <li><strong>Event storage:</strong> Append-only SQLite audit history + mutable fingerprint state</li>
+                            <li><strong>Event collection:</strong> Watchdog catches OS notifications (non-blocking
+                                queue)</li>
+                            <li><strong>Event processing:</strong> Separate loop applies quiet period (0.4s),
+                                fingerprints, analyzes</li>
+                            <li><strong>Event storage:</strong> Append-only SQLite audit history + mutable fingerprint
+                                state</li>
                             <li><strong>Event presentation:</strong> Decoupled terminal CLI and live web dashboard</li>
                         </ul>
-                        <p>This separation prevents filesystem bursts from overwhelming the watcher and allows multiple frontends to consume the same verified events.</p>
+                        <p>This separation prevents filesystem bursts from overwhelming the watcher and allows multiple
+                            frontends to consume the same verified events.</p>
 
                         <h4>Operational Modes</h4>
                         <ul>
                             <li><strong>watch:</strong> Live monitoring with optional dashboard launch</li>
                             <li><strong>baseline:</strong> Record current filesystem as known-good state</li>
-                            <li><strong>audit:</strong> Compare current state against baseline (CI/automation suitable)</li>
+                            <li><strong>audit:</strong> Compare current state against baseline (CI/automation suitable)
+                            </li>
                             <li><strong>history:</strong> Display recorded events with severity/path filtering</li>
                             <li><strong>stats:</strong> Summary of monitoring activity and busiest paths</li>
                         </ul>
 
                         <h4>Offline Integrity Auditing</h4>
-                        <p>Live monitoring only catches changes while Guard is running. Guard also supports baseline + audit workflows:</p>
+                        <p>Live monitoring only catches changes while Guard is running. Guard also supports baseline +
+                            audit workflows:</p>
                         <ul>
                             <li>Baseline: Fingerprints entire directory tree as known-good</li>
-                            <li>Audit: Walks current filesystem, compares against baseline, identifies new/changed/removed files</li>
+                            <li>Audit: Walks current filesystem, compares against baseline, identifies
+                                new/changed/removed files</li>
                             <li>Non-zero exit on differences (useful for automation)</li>
                         </ul>
-                        <p>This provides two complementary protection modes: <strong>live detection</strong> and <strong>offline discovery</strong>.</p>
+                        <p>This provides two complementary protection modes: <strong>live detection</strong> and
+                            <strong>offline discovery</strong>.</p>
 
                         <h4>Local Web Dashboard</h4>
                         <ul>
@@ -260,7 +293,9 @@
                 </div>
 
                 <p class="project-summary">
-                    A cross-platform desktop application that transforms raw OS-level networking data and command output into live telemetry, structured diagnostics, process-attributed connections, and local-network intelligence through a shared Python core, Qt desktop interface, and CLI.
+                    A cross-platform desktop application that transforms raw OS-level networking data and command output
+                    into live telemetry, structured diagnostics, process-attributed connections, and local-network
+                    intelligence through a shared Python core, Qt desktop interface, and CLI.
                 </p>
 
                 <div class="project-meta">
@@ -288,14 +323,21 @@
                     <summary>See the Architecture</summary>
                     <div class="details-content">
                         <h4>The Core Insight</h4>
-                        <p>Traditional network troubleshooting means switching between multiple platform-specific commands (ping, netstat, traceroute, arp, route...), each with different output formats and designed for terminal interpretation.</p>
-                        <p><strong>NetPulse's approach:</strong> Normalize command output across platforms into structured data, then present that data intelligently through live visualization instead of raw terminal output.</p>
-                        <p><strong>The transformation:</strong> OS signal → cross-platform parser → structured object → live visualization / CLI output</p>
+                        <p>Traditional network troubleshooting means switching between multiple platform-specific
+                            commands (ping, netstat, traceroute, arp, route...), each with different output formats and
+                            designed for terminal interpretation.</p>
+                        <p><strong>NetPulse's approach:</strong> Normalize command output across platforms into
+                            structured data, then present that data intelligently through live visualization instead of
+                            raw terminal output.</p>
+                        <p><strong>The transformation:</strong> OS signal → cross-platform parser → structured object →
+                            live visualization / CLI output</p>
 
                         <h4>Live Bandwidth Monitoring</h4>
                         <ul>
-                            <li><strong>Source:</strong> Direct OS network counters (psutil), not scraping another app's UI</li>
-                            <li><strong>Calculation:</strong> Finite difference: (current counter − previous counter) / elapsed time</li>
+                            <li><strong>Source:</strong> Direct OS network counters (psutil), not scraping another app's
+                                UI</li>
+                            <li><strong>Calculation:</strong> Finite difference: (current counter − previous counter) /
+                                elapsed time</li>
                             <li><strong>Visualization:</strong> Custom Qt painting (not external graphing library) with:
                                 <ul>
                                     <li>Two-minute scrolling chart</li>
@@ -305,17 +347,20 @@
                                     <li>Per-adapter or combined throughput</li>
                                 </ul>
                             </li>
-                            <li><strong>Robustness:</strong> Detects counter resets (interface disabled/driver reload) and treats negative deltas as zero instead of manufacturing false traffic spikes</li>
+                            <li><strong>Robustness:</strong> Detects counter resets (interface disabled/driver reload)
+                                and treats negative deltas as zero instead of manufacturing false traffic spikes</li>
                         </ul>
 
                         <h4>Process-Attributed Socket Inspection</h4>
-                        <p>Instead of generic netstat output showing "TCP connection established," NetPulse answers: "Which program owns this socket, what state is it in, and who is it talking to?"</p>
+                        <p>Instead of generic netstat output showing "TCP connection established," NetPulse answers:
+                            "Which program owns this socket, what state is it in, and who is it talking to?"</p>
                         <ul>
                             <li>Join socket table with process table</li>
                             <li>Classify endpoints as external vs. local/private</li>
                             <li>Optional reverse DNS for remote hostnames</li>
                             <li>Multi-field filtering (process, PID, protocol, endpoint, state)</li>
-                            <li>Preserve partial info when elevation insufficient (honest partial data > silent gaps)</li>
+                            <li>Preserve partial info when elevation insufficient (honest partial data > silent gaps)
+                            </li>
                             <li>CSV export of connection snapshot</li>
                         </ul>
 
@@ -372,17 +417,24 @@
                         </ul>
 
                         <h4>Cross-Platform Engineering</h4>
-                        <p>The core challenge: Windows, macOS, and Linux do not behave identically. NetPulse works around this with:</p>
+                        <p>The core challenge: Windows, macOS, and Linux do not behave identically. NetPulse works
+                            around this with:</p>
                         <ul>
-                            <li><strong>Command output parsing:</strong> Look for numeric patterns rather than fixed English positions; support localized text variations</li>
-                            <li><strong>Subprocess handling:</strong> Windows suppresses console windows (CREATE_NO_WINDOW), Unix uses process groups for clean termination</li>
-                            <li><strong>Character encoding:</strong> Forgiving decode for unexpected/localized output</li>
-                            <li><strong>Process interface detection:</strong> Use UDP socket routing to determine which adapter carries internet traffic</li>
-                            <li><strong>Test coverage:</strong> Captured real output from Windows, Linux, macOS, and Spanish-locale environments</li>
+                            <li><strong>Command output parsing:</strong> Look for numeric patterns rather than fixed
+                                English positions; support localized text variations</li>
+                            <li><strong>Subprocess handling:</strong> Windows suppresses console windows
+                                (CREATE_NO_WINDOW), Unix uses process groups for clean termination</li>
+                            <li><strong>Character encoding:</strong> Forgiving decode for unexpected/localized output
+                            </li>
+                            <li><strong>Process interface detection:</strong> Use UDP socket routing to determine which
+                                adapter carries internet traffic</li>
+                            <li><strong>Test coverage:</strong> Captured real output from Windows, Linux, macOS, and
+                                Spanish-locale environments</li>
                         </ul>
 
                         <h4>Responsive UI Through Background Workers</h4>
-                        <p>Long operations never block the main thread. All diagnostics run in background QThread workers:</p>
+                        <p>Long operations never block the main thread. All diagnostics run in background QThread
+                            workers:</p>
                         <ul>
                             <li>Results stream progressively (hop-by-hop, port-by-port, device-by-device)</li>
                             <li>UI remains responsive throughout</li>
@@ -391,13 +443,15 @@
                         </ul>
 
                         <h4>Unified Core Architecture</h4>
-                        <p>All networking logic lives in a platform-independent core that does <strong>not</strong> import Qt:</p>
+                        <p>All networking logic lives in a platform-independent core that does <strong>not</strong>
+                            import Qt:</p>
                         <ul>
                             <li><strong>core/</strong> → networking + parsing + statistics (testable in isolation)</li>
                             <li><strong>ui/</strong> → Qt presentation layer</li>
                             <li><strong>cli.py</strong> → terminal interface using same core</li>
                         </ul>
-                        <p>This allows the same diagnostics to power desktop GUI, CLI, and automated tests without duplicating logic.</p>
+                        <p>This allows the same diagnostics to power desktop GUI, CLI, and automated tests without
+                            duplicating logic.</p>
 
                         <h4>CLI Access</h4>
                         <p>The same core is accessible from command line:</p>
@@ -417,28 +471,41 @@
 
                         <h4>Testing & Quality Assurance</h4>
                         <ul>
-                            <li><strong>70+ tests</strong> covering: parsers, statistics, subnet calculations, MAC handling, device classification, jitter/packet-loss math</li>
-                            <li><strong>Real bug caught:</strong> Subnet parser originally tried to expand /8 networks before checking size; test suite revealed this caused 17-second delay. Fixed to 0.09 seconds by checking <code>network.num_addresses</code> first.</li>
+                            <li><strong>70+ tests</strong> covering: parsers, statistics, subnet calculations, MAC
+                                handling, device classification, jitter/packet-loss math</li>
+                            <li><strong>Real bug caught:</strong> Subnet parser originally tried to expand /8 networks
+                                before checking size; test suite revealed this caused 17-second delay. Fixed to 0.09
+                                seconds by checking <code>network.num_addresses</code> first.</li>
                             <li><strong>Cross-platform CI:</strong> Windows, macOS, Linux across Python 3.10–3.12</li>
-                            <li><strong>No external dependencies for tests:</strong> No network access required, no graphical display needed</li>
+                            <li><strong>No external dependencies for tests:</strong> No network access required, no
+                                graphical display needed</li>
                         </ul>
 
                         <h4>Important Design Decisions</h4>
                         <ul>
-                            <li><strong>Sample OS counters, don't scrape UI:</strong> Traffic comes directly from kernel, not Task Manager</li>
+                            <li><strong>Sample OS counters, don't scrape UI:</strong> Traffic comes directly from
+                                kernel, not Task Manager</li>
                             <li><strong>Treat command output as data:</strong> Parse into objects, not text dumps</li>
-                            <li><strong>Graceful degradation:</strong> Optional dependencies like dnspython disappear cleanly if unavailable</li>
-                            <li><strong>Conservative inference:</strong> Admit uncertainty rather than guess wrong device classification</li>
-                            <li><strong>Bounded resources:</strong> Rolling histories and size limits prevent memory runaway</li>
-                            <li><strong>Progressive results:</strong> Don't wait for everything; render as data arrives</li>
-                            <li><strong>Counter reset resilience:</strong> Detect negative deltas from driver reloads, treat as zero</li>
+                            <li><strong>Graceful degradation:</strong> Optional dependencies like dnspython disappear
+                                cleanly if unavailable</li>
+                            <li><strong>Conservative inference:</strong> Admit uncertainty rather than guess wrong
+                                device classification</li>
+                            <li><strong>Bounded resources:</strong> Rolling histories and size limits prevent memory
+                                runaway</li>
+                            <li><strong>Progressive results:</strong> Don't wait for everything; render as data arrives
+                            </li>
+                            <li><strong>Counter reset resilience:</strong> Detect negative deltas from driver reloads,
+                                treat as zero</li>
                         </ul>
 
                         <h4>UI Structure</h4>
                         <ul>
-                            <li><strong>Traffic:</strong> Live chart, adapter selector, rate readouts, peak/average, session totals</li>
-                            <li><strong>Connections:</strong> Process + PID + protocol + endpoints + state, with filtering and export</li>
-                            <li><strong>Diagnostics:</strong> Unified interface for Ping / Traceroute / DNS / Port Scan</li>
+                            <li><strong>Traffic:</strong> Live chart, adapter selector, rate readouts, peak/average,
+                                session totals</li>
+                            <li><strong>Connections:</strong> Process + PID + protocol + endpoints + state, with
+                                filtering and export</li>
+                            <li><strong>Diagnostics:</strong> Unified interface for Ping / Traceroute / DNS / Port Scan
+                            </li>
                             <li><strong>Devices:</strong> Discovered hosts with vendor, role, latency, MAC address</li>
                         </ul>
 
@@ -460,31 +527,31 @@
             </article>
 
             <!-- i dont know what all features are available in html though.. -->
-             <!-- need stuff like tech stack should show.. a link to github should show... and then show more and the information about the project should expand - like show more or some stuff -->
-              <!-- also the more details when u click should be smooth - like since the website itself is smooth scrolling and all i dont need static buttons.. i know we can implement using css but which one is smoother ? css or javascript smoothness? -->
+            <!-- need stuff like tech stack should show.. a link to github should show... and then show more and the information about the project should expand - like show more or some stuff -->
+            <!-- also the more details when u click should be smooth - like since the website itself is smooth scrolling and all i dont need static buttons.. i know we can implement using css but which one is smoother ? css or javascript smoothness? -->
         </section>
 
         <!-- ORIGINAL CODEBASE -->
         <!-- <section id="projects">
             <h2>Projects</h2>
             <!-- Note that you need to keep only the most impactful stuff - get the project content - detailed content from chatgpt - send to claude to get the most impactful content -->
-             <!-- So basically get content from gpt - send to claude and ask it to make it most impactufl -->
-            <!-- <h3>F1_LemunAI</h3> -->
-            <!-- <div></div> -->
-            <!-- <summary></summary> -->
-            <!-- i dont know what all features are available in html though.. -->
-             <!-- need stuff like tech stack should show.. a link to github should show... and then show more and the information about the project should expand - like show more or some stuff -->
-              <!-- also the more details when u click should be smooth - like since the website itself is smooth scrolling and all i dont need static buttons.. i know we can implement using css but which one is smoother ? css or javascript smoothness? -->
-            <!-- <ul class="projects-category"> -->
-                <!-- <li>Tech Stack: C++, Python, OpenVINO, Qt</li> -->
-                <!-- <li><button>Github</button> <summary></summary>   </li> -->
-                <!-- <li>A Local Chatbot capable of generating text,code,img,music. my flagship project - make my own local assitant to automate the tasks.Implented C++ SHA256 security and Python OpenVINO.<button>Details</button></p></li> -->
-            <!-- </ul> -->
-            <!-- <p>P4_Guard : An Active Directory Monitoring Tool. Project helps me track down the changes in the directory so im aware what actually is going wrong and fix it later and review.<button>Details</button><button>Github</button></p> -->
-            <!-- <p>P3_NetPulse : An Active Networking Monitoring Tool. Project designed to help me analysing which application is taking how much bandwidth - this provides a view to see how the netwrok bandwidth is distributed among the various applications.<button>Details</button><button>Github</button></p> -->
-            <!-- <p>P5_Layoffs : Data Analysis on people for particular sectors of job. Project based on analyzing data - used orange application, scatter plot to visualisa the data.<button>Details</button><button>Github</button></p> -->
-            <!-- <p>P2_Echo : An API Based Chatbot - for test purposes. This specific project helps me understand the uses of the API key and how it is linked to the files and how files are retrieveed and all.<button>Details</button><button>Github</button></p> -->
-            <!-- <p>P1_Notepad : A simple and efficient Notepad for the use case of taking notes when necessary. First time working with GUI and Interfaces - this project gets me familiar on how to make GUI on real world system applications.<button>Details</button><button>Github</button></p> -->
+        <!-- So basically get content from gpt - send to claude and ask it to make it most impactufl -->
+        <!-- <h3>F1_LemunAI</h3> -->
+        <!-- <div></div> -->
+        <!-- <summary></summary> -->
+        <!-- i dont know what all features are available in html though.. -->
+        <!-- need stuff like tech stack should show.. a link to github should show... and then show more and the information about the project should expand - like show more or some stuff -->
+        <!-- also the more details when u click should be smooth - like since the website itself is smooth scrolling and all i dont need static buttons.. i know we can implement using css but which one is smoother ? css or javascript smoothness? -->
+        <!-- <ul class="projects-category"> -->
+        <!-- <li>Tech Stack: C++, Python, OpenVINO, Qt</li> -->
+        <!-- <li><button>Github</button> <summary></summary>   </li> -->
+        <!-- <li>A Local Chatbot capable of generating text,code,img,music. my flagship project - make my own local assitant to automate the tasks.Implented C++ SHA256 security and Python OpenVINO.<button>Details</button></p></li> -->
+        <!-- </ul> -->
+        <!-- <p>P4_Guard : An Active Directory Monitoring Tool. Project helps me track down the changes in the directory so im aware what actually is going wrong and fix it later and review.<button>Details</button><button>Github</button></p> -->
+        <!-- <p>P3_NetPulse : An Active Networking Monitoring Tool. Project designed to help me analysing which application is taking how much bandwidth - this provides a view to see how the netwrok bandwidth is distributed among the various applications.<button>Details</button><button>Github</button></p> -->
+        <!-- <p>P5_Layoffs : Data Analysis on people for particular sectors of job. Project based on analyzing data - used orange application, scatter plot to visualisa the data.<button>Details</button><button>Github</button></p> -->
+        <!-- <p>P2_Echo : An API Based Chatbot - for test purposes. This specific project helps me understand the uses of the API key and how it is linked to the files and how files are retrieveed and all.<button>Details</button><button>Github</button></p> -->
+        <!-- <p>P1_Notepad : A simple and efficient Notepad for the use case of taking notes when necessary. First time working with GUI and Interfaces - this project gets me familiar on how to make GUI on real world system applications.<button>Details</button><button>Github</button></p> -->
         <!-- </section> -->
 
         <section id="experience">
@@ -503,14 +570,14 @@
             </ul>
             <h3>Web Development</h3>
             <ul class="skills-category">
-                <li>HTML 5</li>
+                <li>HTML5</li>
                 <li>CSS</li>
-                <li>Javascript</li>
+                <li>JavaScript</li>
             </ul>
             <h3>Databases</h3>
             <ul class="skills-category">
-                <li>My SQL</li>
-                <li>PostgresSQL</li>
+                <li>MySQL</li>
+                <li>PostgreSQL</li>
                 <li>SQLite</li>
             </ul>
             <h3>AI/Machine Learning</h3>
@@ -522,14 +589,14 @@
             <ul class="skills-category">
                 <li>Orange</li>
                 <li>Pandas</li>
-                <li>Numpy</li>
+                <li>NumPy</li>
                 <li>Matplotlib</li>
                 <li>Data Visualization</li>
             </ul>
             <h3>Version Control</h3>
             <ul class="skills-category">
                 <li>Git</li>
-                <li>Github</li>
+                <li>GitHub</li>
                 <li>Docker</li>
             </ul>
             <h3>Developer Tools</h3>
@@ -575,10 +642,10 @@
 
         <section id="research">
             <h2>Research</h2>
-            <p>Autonomous Academic Research Assistant : Currently Training Model in unsloth application.</p>
+            <p>Autonomous Academic Research Assistant : Currently Training Model in Unsloth application.</p>
             <!-- idk if u add a para or text or whatveer fill this up with the most impactful stuff - im traning a qwen 2.5b 8gb model for my lemunai -->
-            <p>Tools: Kaggle, unsloth</p>
-            <p>Experiemnting with Unsloth for training self AI - LemunAI</p>
+            <p>Tools: Kaggle, Unsloth</p>
+            <p>Experimenting with Unsloth for training self AI - LemunAI</p>
         </section>
 
         <section id="achievements">
@@ -599,27 +666,80 @@
 
         <section id="about">
             <h2>About</h2>
+            <!-- FIRST PASS - ABOUT: to add something new later, copy one <div> inside .about-facts (or one <p>), paste it right below and edit the copy. CSS already styles it, nothing else to touch. -->
+            <p class="about-lead">I build software that sits close to the machine: local AI that runs on hardware you
+                already own, security tooling that turns filesystem noise into evidence, and network diagnostics that
+                make raw OS output readable.</p>
+            <p>Three end-to-end projects so far: F1_LemunAI, P4_Guard and P3_NetPulse. I measure instead of assuming. On
+                my own hardware, Qwen3 8B ran better on the CPU than on the NPU for certain patterns, and I design
+                around results like that.</p>
+            <dl class="about-facts">
+                <div>
+                    <dt>Focus</dt>
+                    <dd>Systems · Local AI · Networking</dd>
+                </div>
+                <div>
+                    <dt>Building</dt>
+                    <dd>F1_LemunAI, a hardware-aware local AI platform</dd>
+                </div>
+                <div>
+                    <dt>Training</dt>
+                    <dd>Qwen with Unsloth on Kaggle, for LemunAI</dd>
+                </div>
+                <div>
+                    <dt>Credentials</dt>
+                    <dd>Cisco CCNA · Oracle Java Foundations · NPTEL (IIT Kanpur, IIT Ropar)</dd>
+                </div>
+                <div>
+                    <dt>Open to</dt>
+                    <dd>Internships</dd>
+                </div>
+            </dl>
+            <!-- LOCATION READOUT: index.js overwrites these two spans from index.json, which the pre-commit hook rewrites on every commit. The text below is only the fallback. -->
+            <p class="about-location" id="about-location">
+                <span class="blink-dot" aria-hidden="true"></span>
+                <span class="loc-tag">Location</span>
+                <span id="loc-coords">18°55′N 72°49′E</span>
+                <span id="loc-place">Mumbai, India</span>
+            </p>
             <!-- i literally dunno what to write it - whatever u do ask me or well just fill it up with the most impactful stuff -->
             <!-- also like add a valorant style blinking - like location 25degree north 25min east etc - you know how valorant gives corrdinates right? i want that for pin code 400005 - or better dynamically see where im pushing it from and update according to that pin code - this gives max freedom - no need to manually change pin code again -->
-             <!-- CAPTURE THE IP ADDRESS OF THE LOCATION WHERE SOMEONE OPNEED AND STORE IT IN JSON FORMATat index.json - append -->
-              <!-- the reson we are capturing so we will know like who got interested in our resumme and checked our portfolio - this will keep us informed that we are getting reach instead of silent rejection and waiting for reply - by this atleast we are knowing that they reveied they didnt like so by that we can accept a rejection instead of silently waiting for them - this will save my time also -->
+            <!-- CAPTURE THE IP ADDRESS OF THE LOCATION WHERE SOMEONE OPNEED AND STORE IT IN JSON FORMATat index.json - append and well show it display also in a dynamic area - like say "Viewing from state,country - with ip" -->
+            <!-- the reson we are capturing so we will know like who got interested in our resumme and checked our portfolio - this will keep us informed that we are getting reach instead of silent rejection and waiting for reply - by this atleast we are knowing that they reveied they didnt like so by that we can accept a rejection instead of silently waiting for them - this will save my time also -->
         </section>
     </main>
 
     <footer id="contact">
         <h2>Follow Me</h2>
-        <p>© Nikhil Upadhyay - 2026</p>
-        <!-- Attach icons - idk how to attach stuff -->
+        <!-- FIRST PASS - FOLLOW ME: to add a link, copy one <li>, paste it below and change href, icon and label. LINKS ARE PLACEHOLDERS (yourname) - replace in the last pass. -->
+        <ul class="follow">
+            <li><a href="https://github.com/nikhilupadhyay-one-by-one" target="_blank" rel="noopener"><svg
+                        viewBox="0 0 16 16" aria-hidden="true">
+                        <path
+                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                    </svg>GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/yourname" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"
+                        aria-hidden="true">
+                        <path
+                            d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                    </svg>LinkedIn</a></li>
+            <li><a href="mailto:yourname@example.com"><svg class="stroke" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 6h18v12H3zM3 7l9 6 9-6" />
+                    </svg>Email</a></li>
+        </ul>
+        <p><small>© 2026 Nikhil Upadhyay</small></p>
+        <!-- Attach icons - idk how to attach stuff - heck im not even sure if the copyright stuff should be in para or h2 or text or what..... -->
     </footer>
     <button id="sound" type="button" aria-pressed="false" aria-label="Toggle ambient sound">
         <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/>
-            <path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>
-            <path class="off" d="M17 9l5 6M22 9l-5 6"/>
+            <path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor" />
+            <path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" />
+            <path class="off" d="M17 9l5 6M22 9l-5 6" />
         </svg>
         <span>Sound off</span>
     </button>
 </body>
+
 </html>
 
 
@@ -627,12 +747,11 @@
 
 <!-- TO DO FIRST PASS - IGNORE ALL COMMENTS AND DO THIS FIRST  -->
 <!-- first ignore all the stuff be it incorrect or correct i dont care - just focus on filling up FOLLOW ME/CONTACT section and ABOUT section -->
+<!-- ANOTHER FIX REQUIRED ASAP WITH THE FIRST PASS ITSELF - NO IM NOT PUTTING IT FOR NEXT PASS - SPELLING BROOOO I SUCK BAD _ PLEASE FIX SPELLINGS ALSO>>>> IM SO SAD FOR MYSELF DAMN - DONT WORRY ABOUT LINKS ILL ADD THEM IN LAST -->
+<!-- if possible try to add dynamic about - like if i git push from mumbai it should show the exact coordinates and if i push from delhi same should be applicable instead of changing this shit so many times.... -->
 <!-- FIRST PASS IS ESPECIFICALLY THIS! - FIRST PASS WAIT FOR SECOND PASS FOR MORE FIXES -->
 
-
-
-
-
+<!-- SPACE FOR SECOND AND OTHER PASS -->
 
 
 <!-- ++++++++++++++++++++++++++++= -->

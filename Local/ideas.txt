@@ -8,4 +8,4 @@
 8. interactive js //
 9. cool favicon - later
 10. check the sounds for the lightning and the other rain //
-11. capture the ip address
+11. capture the ip address //

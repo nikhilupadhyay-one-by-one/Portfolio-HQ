@@ -404,3 +404,28 @@ h2 { margin: 0 0 1rem; font-weight: 300; font-size: 2rem; }
     color: var(--lamp);
     font-weight: 400;
 }
+
+/* FIRST PASS - ABOUT + FOLLOW ME. Plain classes: copying an existing <div>/<li> in index.html keeps the look. */
+.about-lead { font-size: 1.2rem; color: var(--moon); }
+.about-facts { margin: 2rem 0; display: grid; gap: .9rem; }
+.about-facts div { display: grid; grid-template-columns: 8rem 1fr; gap: 1rem; padding-bottom: .9rem; border-bottom: 1px solid var(--line); }
+.about-facts div:last-child { border-bottom: 0; }
+.about-facts dt { color: var(--lamp); font-weight: 400; }
+.about-facts dd { margin: 0; color: var(--moon); }
+@media (max-width: 34rem) { .about-facts div { grid-template-columns: 1fr; gap: .2rem; } }
+
+/* Valorant-style location readout: small caps tag, mono coordinates, blinking marker */
+.about-location { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin: 2rem 0 0; font: 400 .85rem/1.4 "Courier New", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--mist); }
+.about-location .loc-tag { color: var(--lamp); }
+.blink-dot { width: .55rem; height: .55rem; border-radius: 50%; background: var(--lamp); box-shadow: 0 0 10px var(--lamp); animation: blink 1.4s steps(2, start) infinite; }
+@keyframes blink { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .blink-dot { animation: none; } }
+
+.follow { list-style: none; display: flex; flex-wrap: wrap; gap: .75rem; padding: 0; margin: 1.25rem 0 2rem; }
+.follow a { display: inline-flex; align-items: center; gap: .6rem; padding: .6rem 1.1rem; color: var(--mist); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; transition: color .3s, border-color .3s, box-shadow .3s; }
+.follow a:hover, .follow a:focus-visible { color: var(--lamp); border-color: rgba(255, 179, 92, .45); box-shadow: 0 0 14px rgba(255, 179, 92, .2); }
+.follow a:focus-visible { outline: 2px solid var(--lamp); outline-offset: 4px; }
+.follow svg { width: 18px; height: 18px; fill: currentColor; }
+.follow svg.stroke { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+footer small { color: var(--mist); font-size: .9rem; }
+/* FIRST PASS CSS ENDS */

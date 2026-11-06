@@ -634,3 +634,24 @@ void main(){
 //         document.hidden ? ctx.suspend() : ctx.resume();
 //     });
 // })();
+
+/* ============================================================
+   6. ABOUT: LOCATION READOUT  (index.json -> blinking coordinates)
+   ============================================================ */
+(() => {
+    if (!document.getElementById('about-location')) return;
+    const dm = (v, pos, neg) => {                          // 18.94 -> 18°56′N (degrees + minutes)
+        let d = Math.floor(Math.abs(v)), m = Math.round((Math.abs(v) - d) * 60);
+        if (m === 60) { d++; m = 0; }
+        return `${d}°${String(m).padStart(2, '0')}′${v < 0 ? neg : pos}`;
+    };
+    fetch('index.json', { cache: 'no-store' })
+        .then(r => r.ok ? r.json() : Promise.reject(new Error(`index.json: HTTP ${r.status}`)))
+        .then(data => {
+            const l = data.location;                       // location sits under its own key, so other data can live beside it later
+            document.getElementById('loc-coords').textContent = `${dm(l.lat, 'N', 'S')} ${dm(l.lon, 'E', 'W')}`;
+            document.getElementById('loc-place').textContent = [l.city, l.country].filter(Boolean).join(', ');
+        })
+        .catch(err => console.warn('[location]', err.message));   // fallback text in the HTML stays
+})();
+// ABOUT LOCATION ENDS
