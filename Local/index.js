@@ -656,3 +656,36 @@ void main(){
         .catch(err => console.warn('[location]', err.message));   // fallback text in the HTML stays
 })();
 // ABOUT LOCATION ENDS
+
+
+/* ============================================================
+   7. ABOUT: VIEWER LOCATION  (where the person reading the page is; looked up in their own browser)
+   ============================================================ */
+(async () => {
+    const box = document.getElementById('viewer-location');
+    if (!box) return;
+    const dm = (v, pos, neg) => {                          // same degrees + minutes helper as section 6
+        let d = Math.floor(Math.abs(v)), m = Math.round((Math.abs(v) - d) * 60);
+        if (m === 60) { d++; m = 0; }
+        return `${d}°${String(m).padStart(2, '0')}′${v < 0 ? neg : pos}`;
+    };
+    // Free, key-less lookups, tried in order. Each read turns that service's reply into {city, country, lat, lon}.
+    const providers = [
+        { url: 'https://ipwho.is/',
+          read: d => d.success === false ? null : { city: d.city, country: d.country, lat: d.latitude, lon: d.longitude } },
+        { url: 'https://get.geojs.io/v1/ip/geo.json',
+          read: d => ({ city: d.city, country: d.country, lat: parseFloat(d.latitude), lon: parseFloat(d.longitude) }) },
+    ];
+    for (const p of providers) {
+        try {
+            const r = await fetch(p.url, { signal: AbortSignal.timeout(4000) });
+            const l = p.read(await r.json());
+            if (!l || !Number.isFinite(l.lat) || !Number.isFinite(l.lon)) continue;   // bad reply: try the next service
+            document.getElementById('viewer-coords').textContent = `${dm(l.lat, 'N', 'S')} ${dm(l.lon, 'E', 'W')}`;
+            document.getElementById('viewer-place').textContent = [l.city, l.country].filter(Boolean).join(', ');
+            box.hidden = false;                            // reveal the line only now that it has real data
+            return;
+        } catch (err) { console.warn('[viewer]', p.url, err.message); }
+    }
+})();
+// ABOUT VIEWER LOCATION ENDS

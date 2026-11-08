@@ -430,3 +430,7 @@ h2 { margin: 0 0 1rem; font-weight: 300; font-size: 2rem; }
 .follow svg.stroke { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 footer small { color: var(--mist); font-size: .9rem; }
 /* FIRST PASS CSS ENDS */
+
+/* VIEWER READOUT */
+.about-location[hidden] { display: none; }
+#viewer-location { margin-top: .6rem; }

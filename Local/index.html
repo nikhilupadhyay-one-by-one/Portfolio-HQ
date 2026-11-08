@@ -699,10 +699,17 @@
             <!-- LOCATION READOUT: index.js fills these two spans from index.json, which update_location.py rewrites. -->
             <p class="about-location" id="about-location" hidden>
                 <span class="blink-dot" aria-hidden="true"></span>
-                <span class="loc-tag">Location</span>
+                <span class="loc-tag">Operating from</span>
                 <span id="loc-coords">18°55′N 72°49′E</span>
                 <span id="loc-place">Mumbai, India</span>
             </p>
+            <!-- VIEWER READOUT: filled in the visitor's own browser by index.js (section 7); hidden if the lookup fails. Nothing is stored. -->
+<p class="about-location" id="viewer-location" hidden>
+    <span class="blink-dot" aria-hidden="true"></span>
+    <span class="loc-tag">Viewing from</span>
+    <span id="viewer-coords"></span>
+    <span id="viewer-place"></span>
+</p>
             <!-- i literally dunno what to write it - whatever u do ask me or well just fill it up with the most impactful stuff -->
             <!-- also like add a valorant style blinking - like location 25degree north 25min east etc - you know how valorant gives corrdinates right? i want that for pin code 400005 - or better dynamically see where im pushing it from and update according to that pin code - this gives max freedom - no need to manually change pin code again -->
             <!-- CAPTURE THE IP ADDRESS OF THE LOCATION WHERE SOMEONE OPNEED AND STORE IT IN JSON FORMATat index.json - append and well show it display also in a dynamic area - like say "Viewing from state,country - with ip" -->
@@ -728,7 +735,7 @@
                         <path d="M3 6h18v12H3zM3 7l9 6 9-6" />
                     </svg>Email</a></li>
         </ul>
-        <p><small>© 2026 Nikhil Upadhyay</small></p>
+        <p><small>© 2026 Nikhil Upadhyay · The "Viewing from" line is looked up in your browser by a third-party IP service; this site stores nothing.</small></p>
         <!-- Attach icons - idk how to attach stuff - heck im not even sure if the copyright stuff should be in para or h2 or text or what..... -->
     </footer>
     <button id="sound" type="button" aria-pressed="false" aria-label="Toggle ambient sound">
