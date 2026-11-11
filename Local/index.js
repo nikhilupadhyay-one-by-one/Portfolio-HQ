@@ -678,7 +678,7 @@ void main(){
     ];
     for (const p of providers) {
         try {
-            const r = await fetch(p.url, { signal: AbortSignal.timeout(4000) });
+            const r = await fetch(p.url, AbortSignal.timeout ? { signal: AbortSignal.timeout(4000) } : {});   // older Safari has no AbortSignal.timeout
             const l = p.read(await r.json());
             if (!l || !Number.isFinite(l.lat) || !Number.isFinite(l.lon)) continue;   // bad reply: try the next service
             document.getElementById('viewer-coords').textContent = `${dm(l.lat, 'N', 'S')} ${dm(l.lon, 'E', 'W')}`;

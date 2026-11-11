@@ -434,3 +434,40 @@ footer small { color: var(--mist); font-size: .9rem; }
 /* VIEWER READOUT */
 .about-location[hidden] { display: none; }
 #viewer-location { margin-top: .6rem; }
+
+/* PASS 3 - SKILLS: one row per category (label left, skills as small pills right). The HTML stays a flat list of <h3> + <ul class="skills-category">: to add a skill copy an <li>; to add a category copy an <h3> and its <ul>. */
+#skills { display: grid; grid-template-columns: minmax(8rem, 12rem) 1fr; align-items: start; }
+#skills h2 { grid-column: 1 / -1; }
+#skills h3 { margin: 0; padding: .8rem 1.5rem .8rem 0; border-top: 1px solid var(--line); font-size: 1rem; font-weight: 400; color: var(--lamp); }
+#skills .skills-category { margin: 0; padding: .65rem 0; border-top: 1px solid var(--line); list-style: none; display: flex; flex-wrap: wrap; gap: .45rem; }
+#skills .skills-category li { padding: .15rem .8rem; border: 1px solid var(--line); border-radius: 999px; font-size: .92rem; line-height: 1.6; color: var(--mist); transition: color .3s, border-color .3s; }
+#skills .skills-category li:hover { color: var(--lamp); border-color: rgba(255, 179, 92, .45); }
+@media (max-width: 40rem) {
+    #skills { grid-template-columns: 1fr; }
+    #skills .skills-category { padding-top: 0; border-top: 0; }
+}
+
+/* PASS 3 - EXPERIENCE: each entry is an <article class="entry">. To add one, copy the whole block in index.html and edit the copy. */
+.entry { padding: 1.1rem 0; border-top: 1px solid var(--line); }
+.entry:first-of-type { padding-top: .3rem; border-top: 0; }
+.entry h3 { margin: 0; font-size: 1.3rem; font-weight: 400; color: var(--moon); }
+.entry-meta { margin: .25rem 0 0; color: var(--mist); font-style: italic; }
+.entry p:not(.entry-meta) { margin: .6rem 0 0; }
+/* PASS 3 CSS ENDS */
+
+/* PASS 3 - PROJECTS: the section is already one glass panel, so each card inside becomes a plain block split by a line (no card-in-card, no doubled padding on phones). */
+#projects .project-card { width: auto; margin: 0; padding: 2.25rem 0; background: none; border: 0; border-top: 1px solid var(--line); border-radius: 0; -webkit-backdrop-filter: none; backdrop-filter: none; }
+#projects .project-card:first-of-type { padding-top: 1rem; border-top: 0; }
+#projects .project-card:last-of-type { padding-bottom: 0; }
+
+/* PASS 3 - ACHIEVEMENTS: plain rows split by a line instead of default bullets */
+.achievements { list-style: none; margin: 0; padding: 0; }
+.achievements li { padding: .7rem 0; border-top: 1px solid var(--line); }
+.achievements li:first-child { padding-top: .2rem; border-top: 0; }
+
+/* PASS 3 - NAV on phones: 8 links no longer run off the screen; they wrap onto a second row */
+@media (max-width: 40rem) {
+    nav { flex-wrap: wrap; gap: .35rem 1.1rem; padding: .8rem .75rem 1.6rem; font-size: .9rem; }
+    section, footer { scroll-margin-top: 6rem; }
+}
+/* PASS 3 EVERYTHING-ELSE CSS ENDS */
