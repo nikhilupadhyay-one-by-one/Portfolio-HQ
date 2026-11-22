@@ -471,3 +471,9 @@ footer small { color: var(--mist); font-size: .9rem; }
     section, footer { scroll-margin-top: 6rem; }
 }
 /* PASS 3 EVERYTHING-ELSE CSS ENDS */
+
+/* PASS 4 - RESEARCH ENTRY: bullets inside an entry */
+.entry ul { margin: .8rem 0 0; padding-left: 1.2rem; }
+.entry li { margin: .45rem 0; }
+.entry li strong { color: var(--lamp); font-weight: 400; }
+/* PASS 4 CSS ENDS */

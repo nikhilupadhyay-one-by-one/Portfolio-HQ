@@ -657,10 +657,46 @@
             <!-- <p>Tools: Kaggle, Unsloth</p> -->
             <!-- <p>Experimenting with Unsloth for training self AI - LemunAI</p> -->
             <!-- PASS 3 - RESEARCH: same entry block as Experience. Copy the <article class="entry"> to add another. -->
-            <article class="entry">
+            <!-- PASS 4: replaced by the paper-based entry below. Old entry kept: <article class="entry">
                 <h3>Autonomous Academic Research Assistant</h3>
                 <p class="entry-meta">In progress: training a model with Unsloth, for LemunAI</p>
                 <p>Tools: Kaggle, Unsloth</p>
+            </article> -->
+            <!-- PASS 4 - RESEARCH: from the project report and the IEEE-format paper. Where they differ, the paper's pilot numbers are used. -->
+            <article class="entry">
+                <h3>Autonomous Academic Research Assistant</h3>
+                <p class="entry-meta">Claim-level evidence retrieval and review prioritisation (prototype AIG-POC). Team project, supervised by Dr. Vivek Anand M, Alliance University (B.Tech CSE, Design Project I, 2026). Paper in preparation, not yet submitted.</p>
+                <p>Checking a research idea against the literature is slow, and ordinary search mostly returns papers that agree with you. This tool takes each claim in an abstract, searches for evidence for it and against it, labels how every retrieved paper relates to the claim using only its abstract, and ranks which claims a human should check first. It never says whether an idea is true or novel; that decision stays with the reviewer.</p>
+                <ul>
+                    <li><strong>Built:</strong> a working Streamlit app in a single Python file, with Semantic Scholar search, a Crossref fallback, quotation checking, a 0 to 100 review-priority score and an exportable research dossier.</li>
+                    <li><strong>Tested:</strong> 45 offline unit tests, plus a pilot on 30 claims from three arXiv areas (AI, machine learning, language processing).</li>
+                    <li><strong>Analysis:</strong> bootstrap confidence intervals, exact McNemar tests, Cohen's kappa, a weight-sensitivity analysis and a reproducibility audit (134 of 136 checks passed, none failed).</li>
+                    <li><strong>Result, stated plainly:</strong> searching in both directions raised the rate of challenging papers by 0.47 percentage points over a single query (95% CI -1.00 to 2.40), which cannot be told apart from no change. There are no human gold labels, so agreement figures are between two AI labellers, not experts.</li>
+                </ul>
+                <details class="project-details">
+                    <summary>Method, pilot design and findings</summary>
+                    <div class="details-content">
+                        <h4>Method (BiVEC-CG)</h4>
+                        <p>Each claim gets a support query and a challenge query. A coverage gate runs one extra "failure, replication, null results" search when fewer than two usable challenge papers come back. Results are merged by DOI, paper ID or title, and every paper keeps a record of the query, branch and provider that found it. Each claim-paper pair is labelled SUPPORTS, CONTRADICTS, MIXED or INSUFFICIENT at temperature 0, and a quotation is shown only if it matches the abstract text. INSUFFICIENT is a legitimate answer, and papers with no abstract are never labelled.</p>
+                        <h4>Pilot design</h4>
+                        <p>30 locked claims (10 each from cs.AI, cs.LG and cs.CL, arXiv 2024 to 2025). 26 completed all three retrieval strategies: one query, both directions, and both directions plus the coverage gate. Four failed on Semantic Scholar queries and were excluded, not counted as zero hits. The top five results per strategy gave 152 distinct claim-paper records; 127 had abstracts and were labelled independently by two GPT-OSS models (20B and 120B).</p>
+                        <h4>Findings</h4>
+                        <ul>
+                            <li>The coverage gate fired on 10 of 26 claims but did not change the measured top-five rates.</li>
+                            <li>Relevance dropped about 2 points for two-direction search in both models (intervals include zero).</li>
+                            <li>88 to 92% of pairs were INSUFFICIENT: abstracts rarely contain direct evidence.</li>
+                            <li>Model agreement: relevance kappa 0.82 to 0.90, four-way evidence label kappa 0.44 to 0.47, challenge labels identical on every pair.</li>
+                            <li>The quotation check rejected 9.5% of the 20B model's quotes and 25% of the 120B model's.</li>
+                            <li>Changing the priority-score weights reorders claims noticeably (mean rank correlation 0.64 to 0.67), so the score is a triage aid, not a measurement.</li>
+                        </ul>
+                        <h4>Limits</h4>
+                        <p>No human gold labels, so agreement is between models, not experts. Abstracts only, one search provider (the Crossref fallback was off in the pilot), 26 claims, and AI-assisted screening of the claim set. The pilot shows the pipeline is feasible and auditable; it does not show that two-direction search finds more counter-evidence.</p>
+                        <h4>Tools</h4>
+                        <p>Python, Streamlit, pydantic, requests, Semantic Scholar and Crossref APIs, Groq-hosted GPT-OSS 20B and 120B; optional Ollama, Gemini and OpenAI back-ends.</p>
+                    </div>
+                </details>
+                <!-- LINKS (add last): <p><a class="btn-link" href="REPORT-LINK">Project report (PDF)</a> <a class="btn-link" href="PAPER-LINK">IEEE-format paper</a></p> -->
+                <!-- MY PART + STATUS: add one line on what you personally built or wrote, the paper's venue once it is submitted, and co-author names if the team is happy to be listed. -->
             </article>
         </section>
 
@@ -742,12 +778,12 @@
                         <path
                             d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
                     </svg>GitHub</a></li>
-            <li><a href="https://www.linkedin.com/in/nikhil-upadhyay-one-by-one/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"
+            <li><a href="https://www.linkedin.com/in/yourname" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"
                         aria-hidden="true">
                         <path
                             d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                     </svg>LinkedIn</a></li>
-            <li><a href="mailto:nikhilupadhyay.dev@gmail.com"><svg class="stroke" viewBox="0 0 24 24" aria-hidden="true">
+            <li><a href="mailto:yourname@example.com"><svg class="stroke" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M3 6h18v12H3zM3 7l9 6 9-6" />
                     </svg>Email</a></li>
         </ul>
